@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
-import { useSession, signIn, signOut } from "next-auth/react"
 
 const navigation = [
   { name: 'Product', href: '#' },
@@ -13,7 +12,6 @@ const navigation = [
 
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const { data: session } = useSession()
 
   return (
     <div className="isolate bg-white">
@@ -142,17 +140,6 @@ export default function Home() {
                 >
                   Log in
                 </Link>
-                {session ? (
-                  <>
-                    Signed in as {session.user.email} <br />
-                    <button onClick={() => signOut()}>Sign out</button>
-                  </>
-                ) : (
-                  <>
-                    Not signed in <br />
-                    <button onClick={() => signIn()}>Sign in</button>
-                  </>
-                )}
                 <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
                   Learn more <span aria-hidden="true">→</span>
                 </a>
