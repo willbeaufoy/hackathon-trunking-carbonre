@@ -1,15 +1,10 @@
 import * as React from 'react';
 import { useAuth, useUser, SuspenseWithPerf, useSigninCheck } from 'reactfire';
-import { GoogleAuthProvider, signInWithPopup, User, Auth } from "firebase/auth";
+import { User, Auth } from "firebase/auth";
 import Link from 'next/link';
+import Signin from '@/components/signin';
 
 const signOut = (auth: Auth) => auth.signOut().then(() => console.log('signed out'));
-
-const signIn = async (auth: Auth) => {
-  const provider = new GoogleAuthProvider();
-
-  await signInWithPopup(auth, provider);
-}
 
 export const AuthWrapper = ({ children, fallback }: React.PropsWithChildren<{ fallback: JSX.Element }>): JSX.Element => {
   const { data: signInCheckResult } = useSigninCheck();
@@ -44,23 +39,12 @@ const UserDetails = () => {
   );
 };
 
-const SignInForm = () => {
-  const auth = useAuth();
-
-  return (
-    <section>
-      <h3>Sign in</h3>
-      <button onClick={() => signIn(auth)}>Sign in with Google</button>
-    </section>
-  )
-};
-
 const Loading = () => <span>Loading...</span>
 
 export default function Login() {
   return (
     <SuspenseWithPerf traceId={'firebase-user-wait'} fallback={<Loading />}>
-      <AuthWrapper fallback={<SignInForm />}>
+      <AuthWrapper fallback={<Signin />}>
         <UserDetails />
       </AuthWrapper>
     </SuspenseWithPerf>
