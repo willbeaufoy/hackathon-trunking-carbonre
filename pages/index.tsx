@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useUser } from 'reactfire';
 
 export default function Home() {
@@ -8,6 +9,8 @@ export default function Home() {
       Home <br/>
       Status: {status}<br/>
       User: {user?.displayName}<br/>
+
+      <Link href='/login'>Login</Link>
     </>
   )
 }

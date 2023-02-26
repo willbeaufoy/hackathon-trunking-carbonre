@@ -1,21 +1,21 @@
 import { getAuth, connectAuthEmulator } from 'firebase/auth'; // Firebase v9+
+import { useEffect } from 'react';
 
 import { AuthProvider, useFirebaseApp } from 'reactfire';
 
-// TODO app check
+// TODO AppCheck
 // TODO SSR auth
 
 export default function FirebaseComponents({ children }) {
     const app = useFirebaseApp();
     const auth = getAuth(app);
 
-    // Check for dev/test mode however your app tracks that.
-    // `process.env.NODE_ENV` is a common React pattern
-    if (process.env.NODE_ENV !== 'production') {
-        // Set up emulators
-        connectAuthEmulator(auth, 'http://localhost:9099');
-    }
-
+    useEffect(() => {
+        if (process.env.NEXT_PUBLIC_EMULATOR === 'true') {
+            // Set up emulators
+            connectAuthEmulator(auth, 'http://127.0.0.1:9099');
+        }
+    }, [app])
     // useInitPerformance(
     //     async (firebaseApp) => {
     //         const { getPerformance } = await import('firebase/performance');
