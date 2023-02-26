@@ -33,3 +33,6 @@ yarn-error.log*
 
 .env**
 *-debug.log
+/test-results/
+/playwright-report/
+/playwright/.cache/
