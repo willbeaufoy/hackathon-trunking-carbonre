@@ -6,6 +6,13 @@ import { AuthProvider, useFirebaseApp } from 'reactfire';
 // TODO AppCheck
 // TODO SSR auth
 
+// const app = initializeApp(firebaseConfig);
+import { getAnalytics } from "firebase/analytics";
+// const analytics = getAnalytics(app);
+
+const isSSR = typeof window === "undefined"
+const isCSR = typeof window !== "undefined"
+
 export default function FirebaseComponents({ children }) {
     const app = useFirebaseApp();
     const auth = getAuth(app);
@@ -13,9 +20,12 @@ export default function FirebaseComponents({ children }) {
     useEffect(() => {
         if (process.env.NEXT_PUBLIC_EMULATOR === 'true') {
             // Set up emulators
-            connectAuthEmulator(auth, 'http://127.0.0.1:9099', {disableWarnings: true,});
+            connectAuthEmulator(auth, 'http://127.0.0.1:9099', {disableWarnings: true});
         }
+
+        if (isCSR) getAnalytics(app);
     }, [app])
+
     // useInitPerformance(
     //     async (firebaseApp) => {
     //         const { getPerformance } = await import('firebase/performance');
