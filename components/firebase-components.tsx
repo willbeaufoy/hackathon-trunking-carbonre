@@ -11,7 +11,7 @@ import { getAnalytics } from "firebase/analytics";
 // const analytics = getAnalytics(app);
 
 const isSSR = typeof window === "undefined"
-const isCSR = typeof window !== "undefined"
+const isCSR = !isSSR
 
 export default function FirebaseComponents({ children }) {
     const app = useFirebaseApp();
