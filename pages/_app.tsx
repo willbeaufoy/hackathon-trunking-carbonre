@@ -6,7 +6,7 @@ import { FirebaseAppProvider } from 'reactfire';
 
 export default function App({ Component, pageProps }) {
   return (
-    <FirebaseAppProvider firebaseConfig={firebaseConfig}>
+    <FirebaseAppProvider firebaseConfig={firebaseConfig} suspense={true}>
       <FirebaseComponents>
         <Layout>
           <Component {...pageProps} />
