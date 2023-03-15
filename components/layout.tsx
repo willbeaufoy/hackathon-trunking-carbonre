@@ -10,7 +10,10 @@ export default function Layout({ children }) {
                 <ul>
 
                     {user?.email ? (
-                        <li>Hello {user.email}</li>
+                        <>
+                            <li>Hello {user.email}</li>
+                            <li><Link href="/sign-out">Sign out</Link></li>
+                        </>
                     ) : (
                         <>
                             <li><Link href="/sign-in">Sign in</Link></li>

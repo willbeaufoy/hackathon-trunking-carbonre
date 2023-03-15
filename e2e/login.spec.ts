@@ -47,7 +47,12 @@ test('new users can sign up / sign in', async ({ page }) => {
 
     await page.getByLabel('Password:').fill(myPassword);
     await page.getByRole('button', { name: 'Login' }).click();
+
     // confirm I'm on my personal page
     await page.getByRole('heading', { name: 'Home' }).click();
     await expect(page.getByText(myEmail)).toBeVisible()
+
+    await page.getByRole('link', { name: 'Sign out' }).click();
+    await expect(page.getByText(myEmail)).not.toBeVisible()
+
 })
