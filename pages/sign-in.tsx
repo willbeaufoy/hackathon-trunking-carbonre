@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { RedirectToHome } from '@/components/redirect-to-home';
+import { AuthWrapper } from '@/components/auth-wrapper';
 
 const googleAuthProvider = new GoogleAuthProvider();
 
@@ -49,16 +50,6 @@ export function Signin() {
     </main>
   );
 }
-
-export const AuthWrapper = ({ children, fallback }: React.PropsWithChildren<{ fallback: JSX.Element }>): JSX.Element => {
-  const { data: signInCheckResult, status } = useSigninCheck();
-
-  if (!children) throw new Error('Children must be provided');
-  if (signInCheckResult?.signedIn === true) return children as JSX.Element;
-  if (status === 'loading') return <>Loading</>
-  return fallback;
-};
-
 
 export default function Login() {
   return (
