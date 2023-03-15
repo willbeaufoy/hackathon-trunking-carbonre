@@ -3,6 +3,7 @@ import { SuspenseWithPerf, useAuth, useSigninCheck } from 'reactfire';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { RedirectToHome } from '@/components/redirect-to-home';
 
 const googleAuthProvider = new GoogleAuthProvider();
 
@@ -58,13 +59,6 @@ export const AuthWrapper = ({ children, fallback }: React.PropsWithChildren<{ fa
   return fallback;
 };
 
-function RedirectToHome() {
-  const router = useRouter();
-  useEffect(() => {
-    router.push("/");
-  }, [])
-  return undefined;
-}
 
 export default function Login() {
   return (
