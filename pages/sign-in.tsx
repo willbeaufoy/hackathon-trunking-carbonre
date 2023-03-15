@@ -1,10 +1,9 @@
-import { Loading } from '@/components/loading';
-import { SuspenseWithPerf, useAuth, useSigninCheck } from 'reactfire';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { RedirectToHome } from '@/components/redirect-to-home';
 import { AuthWrapper } from '@/components/auth-wrapper';
+import { Loading } from '@/components/loading';
+import { RedirectToHome } from '@/components/redirect-to-home';
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { useState } from 'react';
+import { SuspenseWithPerf, useAuth } from 'reactfire';
 
 const googleAuthProvider = new GoogleAuthProvider();
 
