@@ -30,10 +30,9 @@ test('new users can sign up / sign in', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Validate email' })).toBeVisible()
 
     // validate email
-    await setTimeout(1_000)
     const resp = await axios.get('http://localhost:9099/emulator/v1/projects/nextjs13-vercel/oobCodes');
     const {oobLink} = resp.data.oobCodes.find(({email}) => email === myEmail);
-    const resp2 = await axios.get(oobLink);
+    await axios.get(oobLink);
 
     
     // go to landing page
