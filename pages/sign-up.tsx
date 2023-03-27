@@ -19,7 +19,6 @@ export function MySignup() {
     createUserWithEmailAndPassword(auth, email, password)
     .then(async (user) => {
       await sendEmailVerification(user.user);
-      await auth.signOut();
       router.push('/validate-email')
     })
   }

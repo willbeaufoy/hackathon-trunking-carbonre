@@ -1,9 +1,8 @@
-import { Loading } from '@/components/loading';
-import { SuspenseWithPerf, useAuth } from 'reactfire';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { RedirectToHome } from '@/components/redirect-to-home';
 import { AuthWrapper } from '@/components/auth-wrapper';
+import { Loading } from '@/components/loading';
+import { RedirectToHome } from '@/components/redirect-to-home';
+import { useEffect } from 'react';
+import { SuspenseWithPerf, useAuth } from 'reactfire';
 
 export function MySignout() {
   const auth = useAuth();

@@ -9,9 +9,9 @@ export default function Layout({ children }) {
             <nav>
                 <ul>
 
-                    {user?.email ? (
+                    {user?.emailVerified ? (
                         <>
-                            <li>Hello {user.email}</li>
+                            <li>Hello {user?.email}</li>
                             <li><Link href="/sign-out">Sign out</Link></li>
                         </>
                     ) : (

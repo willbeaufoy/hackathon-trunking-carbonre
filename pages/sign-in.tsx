@@ -2,15 +2,18 @@ import { AuthWrapper } from '@/components/auth-wrapper';
 import { Loading } from '@/components/loading';
 import { RedirectToHome } from '@/components/redirect-to-home';
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { SuspenseWithPerf, useAuth } from 'reactfire';
 
 const googleAuthProvider = new GoogleAuthProvider();
 
-type SignInState = undefined | 'auth/user-not-found' | 'auth/wrong-password';
+type SignInState = undefined | 'auth/user-not-found' | 'auth/wrong-password' ;
 
 export function Signin() {
   const auth = useAuth();
+  const router = useRouter();
+
   const [signInState, setSignInState] = useState<SignInState>();
 
   function handleFormSubmit(event) {
@@ -18,8 +21,13 @@ export function Signin() {
     const email = event.target.elements.email.value;
     const password = event.target.elements.password.value;
     signInWithEmailAndPassword(auth, email, password)
+      .then(async ({user}) => {
+        if (!user.emailVerified) {
+          await auth.signOut();
+          router.push('/validate-email')
+        }
+      })
       .catch((err) => {
-        // if (password.includes('typo')) debugger;
         if (err?.code) setSignInState(err?.code)
       })
   }
