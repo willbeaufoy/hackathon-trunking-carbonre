@@ -19,7 +19,6 @@ test('new users can sign up / sign in', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
     await page.getByLabel('Email:').fill(myEmail);
     await page.getByLabel('Password:').fill(myPassword);
-    await setTimeout(1000)
     await page.getByRole('button', { name: 'Login' }).click();
     await expect(page.getByText('Invalid email or password')).toBeVisible()
     
@@ -32,12 +31,10 @@ test('new users can sign up / sign in', async ({ page }) => {
     
     // email must be validated to sign in
     await expect(page.getByRole('heading', { name: 'Validate email' })).toBeVisible()
-    await setTimeout(1000)
     await page.getByRole('link', { name: 'Sign in' }).click();
     await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
     await page.getByLabel('Email:').fill(myEmail);
     await page.getByLabel('Password:').fill(myPassword);
-    await setTimeout(1000)
     await page.getByRole('button', { name: 'Login' }).click();
     await expect(page.getByRole('heading', { name: 'Validate email' })).toBeVisible()
 
@@ -54,7 +51,6 @@ test('new users can sign up / sign in', async ({ page }) => {
 
     // wrong password -> no login
     await page.getByLabel('Password:').fill(myPassword + 'typo');
-    await setTimeout(1000)
     await page.getByRole('button', { name: 'Login' }).click();
     await expect(page.getByText('Invalid email or password')).toBeVisible()
 
@@ -63,12 +59,12 @@ test('new users can sign up / sign in', async ({ page }) => {
     await page.getByRole('button', { name: 'Login' }).click();
 
     // once login, user details are visible
-    await page.getByRole('heading', { name: 'Profile' }).click();
+    await page.getByRole('heading', { name: 'Home' }).click();
     await expect(page.getByText(myEmail)).toBeVisible()
 
     // user can sign out
     await page.getByRole('link', { name: 'Sign out' }).click();
-    await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Home' })).toBeVisible()
     await expect(page.getByText(myEmail)).not.toBeVisible()
 
 })

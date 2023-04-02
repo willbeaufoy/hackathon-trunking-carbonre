@@ -1,4 +1,1 @@
-
-export default function Loading() { 
-    return <span>Loading...</span> 
-}
+export const Loading = () => <span>Loading...</span>

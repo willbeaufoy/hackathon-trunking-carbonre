@@ -1,5 +1,5 @@
-import FirebaseComponents from '@/old_pages/components/firebase-components';
-import Layout from '@/old_pages/components/layout';
+import FirebaseComponents from '@/components/firebase-components';
+import Layout from '@/components/layout';
 import { firebaseConfig } from '@/firebase.config';
 import '@/styles/globals.css'
 import { FirebaseAppProvider } from 'reactfire';
