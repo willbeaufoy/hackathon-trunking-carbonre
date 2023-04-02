@@ -1,6 +1,6 @@
-import { AuthWrapper } from '@/components/auth-wrapper';
-import { Loading } from '@/components/loading';
-import { RedirectToHome } from '@/components/redirect-to-home';
+import { AuthWrapper } from '@/old_pages/components/auth-wrapper';
+import { Loading } from '@/old_pages/components/loading';
+import { RedirectToHome } from '@/old_pages/components/redirect-to-home';
 import { useEffect } from 'react';
 import { SuspenseWithPerf, useAuth } from 'reactfire';
 

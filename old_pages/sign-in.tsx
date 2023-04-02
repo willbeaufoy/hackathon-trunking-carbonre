@@ -1,6 +1,6 @@
-import { AuthWrapper } from '@/components/auth-wrapper';
-import { Loading } from '@/components/loading';
-import { RedirectToHome } from '@/components/redirect-to-home';
+import { AuthWrapper } from '@/old_pages/components/auth-wrapper';
+import { Loading } from '@/old_pages/components/loading';
+import { RedirectToHome } from '@/old_pages/components/redirect-to-home';
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
