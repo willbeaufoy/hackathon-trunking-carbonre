@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { getRandomChars } from './tools';
 import axios from 'axios';
-import {setTimeout} from 'timers/promises'
 
 // AS A new user
 // I WANT TO sign up
