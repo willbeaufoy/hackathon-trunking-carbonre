@@ -1,6 +1,6 @@
 import { AuthWrapper } from '@/components/auth-wrapper';
 import { Loading } from '@/components/loading';
-import { RedirectToHome } from '@/components/redirect-to-home';
+import { RedirectTo } from '@/components/redirect-to';
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -62,7 +62,7 @@ export default function Login() {
   return (
     <SuspenseWithPerf traceId={'firebase-user-wait'} fallback={<Loading />}>
       <AuthWrapper fallback={<Signin />}>
-        <RedirectToHome />
+        <RedirectTo to="/" />
       </AuthWrapper>
     </SuspenseWithPerf>
   );

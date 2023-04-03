@@ -2,8 +2,8 @@ import { Loading } from '@/components/loading';
 import { SuspenseWithPerf, useAuth } from 'reactfire';
 import { useRouter } from 'next/router';
 import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup, sendEmailVerification } from 'firebase/auth';
-import { RedirectToHome } from '@/components/redirect-to-home';
 import { AuthWrapper } from '@/components/auth-wrapper';
+import { RedirectTo } from '@/components/redirect-to';
 
 const googleAuthProvider = new GoogleAuthProvider();
 
@@ -46,7 +46,7 @@ export default function Signup() {
   return (
     <SuspenseWithPerf traceId={'firebase-user-wait'} fallback={<Loading />}>
       <AuthWrapper fallback={<MySignup />}>
-        <RedirectToHome />
+         <RedirectTo to="/" />
       </AuthWrapper>
     </SuspenseWithPerf>
   );

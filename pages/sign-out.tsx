@@ -1,6 +1,6 @@
 import { AuthWrapper } from '@/components/auth-wrapper';
 import { Loading } from '@/components/loading';
-import { RedirectToHome } from '@/components/redirect-to-home';
+import { RedirectTo } from '@/components/redirect-to';
 import { useEffect } from 'react';
 import { SuspenseWithPerf, useAuth } from 'reactfire';
 
@@ -17,7 +17,7 @@ export function MySignout() {
 export default function Signup() {
   return (
     <SuspenseWithPerf traceId={'firebase-user-wait'} fallback={<Loading />}>
-      <AuthWrapper fallback={<RedirectToHome />}>
+      <AuthWrapper fallback={<RedirectTo to="/" />}>
         <MySignout />
       </AuthWrapper>
     </SuspenseWithPerf>
