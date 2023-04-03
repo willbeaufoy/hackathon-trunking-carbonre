@@ -1,14 +1,12 @@
-import { AuthWrapper } from '@/components/auth-wrapper';
-import { Loading } from '@/components/loading';
-import { RedirectTo } from '@/components/redirect-to';
+import CheckNotSignedIn from '@/components/check-not-signed-in';
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { SuspenseWithPerf, useAuth } from 'reactfire';
+import { useAuth } from 'reactfire';
 
 const googleAuthProvider = new GoogleAuthProvider();
 
-type SignInState = undefined | 'auth/user-not-found' | 'auth/wrong-password' ;
+type SignInState = undefined | 'auth/user-not-found' | 'auth/wrong-password';
 
 export function Signin() {
   const auth = useAuth();
@@ -21,7 +19,7 @@ export function Signin() {
     const email = event.target.elements.email.value;
     const password = event.target.elements.password.value;
     signInWithEmailAndPassword(auth, email, password)
-      .then(async ({user}) => {
+      .then(async ({ user }) => {
         if (!user.emailVerified) {
           await auth.signOut();
           router.push('/validate-email')
@@ -60,10 +58,8 @@ export function Signin() {
 
 export default function Login() {
   return (
-    <SuspenseWithPerf traceId={'firebase-user-wait'} fallback={<Loading />}>
-      <AuthWrapper fallback={<Signin />}>
-        <RedirectTo to="/" />
-      </AuthWrapper>
-    </SuspenseWithPerf>
+    <CheckNotSignedIn>
+      <Signin />
+    </CheckNotSignedIn>
   );
 };
