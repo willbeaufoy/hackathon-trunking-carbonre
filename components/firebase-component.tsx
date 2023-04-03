@@ -28,7 +28,7 @@ export function MyFirebaseComponent({ children }) {
 
 export default function FirebaseComponent({ children }) {
     return (
-      <FirebaseAppProvider firebaseConfig={firebaseConfig} suspense={true}>
+      <FirebaseAppProvider firebaseConfig={firebaseConfig}>
         <MyFirebaseComponent>
             {children}
         </MyFirebaseComponent>
