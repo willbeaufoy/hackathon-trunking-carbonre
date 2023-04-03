@@ -5,6 +5,6 @@ export function RedirectTo({to}: {to: string}) {
     const router = useRouter();
     useEffect(() => {
       router.push(to);
-    }, [])
+    }, [router, to])
     return undefined;
   }

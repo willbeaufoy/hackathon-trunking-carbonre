@@ -17,7 +17,7 @@ export function MyFirebaseComponent({ children }) {
         if (process.env.NEXT_PUBLIC_EMULATOR === 'true') {
             connectAuthEmulator(auth, 'http://127.0.0.1:9099', {disableWarnings: true});
         }
-    }, [app])
+    }, [app, auth])
 
     return (
         <AuthProvider sdk={auth}>

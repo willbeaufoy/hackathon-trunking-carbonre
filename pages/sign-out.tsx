@@ -7,7 +7,7 @@ export function MySignout() {
   
   useEffect(() => {
     auth.signOut();
-  }, [])
+  }, [auth])
 
   return null;
 }
