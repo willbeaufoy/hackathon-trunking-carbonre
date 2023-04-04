@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useSigninCheck } from "reactfire";
 import { Loading } from "./loading";
 
-export const AuthWrapper = ({ children }) => {
+export default function BumpUnauthorised({ children }) {
   const { data, status } = useSigninCheck();
   const router = useRouter();
 
@@ -19,13 +19,5 @@ export const AuthWrapper = ({ children }) => {
     return <></>;
   }
 
-  return children as JSX.Element;
-};
-
-export default function BumpUnauthorised({ children }) {
-  return (
-    <AuthWrapper>
-      {children}
-    </AuthWrapper>
-  );
-};
+  return children;
+}
