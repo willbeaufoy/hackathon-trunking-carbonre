@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "firebase:dev": "firebase emulators:start",
+    "firebase:firestore:rules:deploy": "firebase deploy --only firestore:rules",
     "test:playwright": "playwright test"
   },
   "dependencies": {

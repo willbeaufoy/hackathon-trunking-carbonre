@@ -12,6 +12,7 @@ export default function Layout({ children }) {
                     {user?.emailVerified ? (
                         <>
                             <li>Hello {user?.email}</li>
+                            <li><Link href="/notes">Notes</Link></li>
                             <li><Link href="/sign-out">Sign out</Link></li>
                         </>
                     ) : (
