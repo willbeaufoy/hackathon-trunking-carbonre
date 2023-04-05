@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useSigninCheck } from "reactfire";
 import { Loading } from "./loading";
+import RedirectTo from "./redirect-to";
 
 export default function CheckNotSignedIn({ children }) {
   const { data, status } = useSigninCheck();
@@ -10,13 +11,11 @@ export default function CheckNotSignedIn({ children }) {
 
   const { user } = data;
   if (user && user.emailVerified) {
-    router.push('/');
-    return <></>;
+    return <RedirectTo to="/"/>;
   }
 
   if (user && !user.emailVerified && router.pathname !== '/validate-email') {
-    router.push('/validate-email');
-    return <></>;
+    return <RedirectTo to="/validate-email"/>;
   }
 
   return children;

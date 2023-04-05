@@ -1,22 +1,20 @@
-import { useRouter } from "next/router";
 import { useSigninCheck } from "reactfire";
 import { Loading } from "./loading";
+import RedirectTo from "./redirect-to";
 
 export default function BumpUnauthorised({ children }) {
   const { data, status } = useSigninCheck();
-  const router = useRouter();
 
   if (status === 'loading') return <Loading />;
 
   const { user } = data;
   if (!user) {
-    router.push('/sign-in');
-    return <></>;
+    return <RedirectTo to="/sign-in"/>;
+
   }
 
   if (!user.emailVerified) {
-    router.push('/validate-email');
-    return <></>;
+    return <RedirectTo to="/validate-email"/>;
   }
 
   return children;
