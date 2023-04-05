@@ -58,7 +58,8 @@ test('user can CRUD notes', async ({ page }) => {
 
     //// update note
     await page.getByRole('button', { name: 'Modify' }).click();
-    //// TODO modify not visible anymore
+    await expect(page.getByRole('button', { name: 'Modify' })).not.toBeVisible();
+
     const modifiedNoteTitle = `I am a modified ${getRandomChars()} note title`;
     await page.getByLabel('Title').fill(modifiedNoteTitle);
     const modifiedNote = `I am a modified ${getRandomChars()} note`;
@@ -68,7 +69,7 @@ test('user can CRUD notes', async ({ page }) => {
     await expect(page.getByRole('heading', { name: modifiedNoteTitle })).toBeVisible()
     await expect(page.getByText(modifiedNote)).toBeVisible()
     //// TODO delete draft
-    
+
     //// delete note
     await page.getByRole('button', { name: 'Delete' }).click();
     await expect(page.getByRole('heading', { name: modifiedNoteTitle })).not.toBeVisible()

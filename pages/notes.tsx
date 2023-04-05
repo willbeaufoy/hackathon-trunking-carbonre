@@ -1,40 +1,46 @@
 import BumpUnauthorised from "@/components/bump-unauthorised";
 import { addDoc, collection, deleteDoc, doc, setDoc } from "firebase/firestore";
-import { FormEventHandler, MouseEventHandler, useState } from "react";
 import { useAuth, useFirestore, useFirestoreCollectionData } from "reactfire";
 
-const Note = ({ note, title, id }: { note: string, title: string, id: string }) => {
-    const [modify, setModify] = useState(false);
+interface NoteProps {
+    id: string;
+    note: string;
+    title: string;
+    draft?: {
+        note: string;
+        title: string
+    }
+  }
 
+const Note = ({ id, note, title, draft }: NoteProps) => {
+    const firestore = useFirestore();
     const auth = useAuth();
     const { uid } = auth.currentUser;
-    const firestore = useFirestore();
     const notesCollection = collection(firestore, `users/${uid}/notes`);
 
-    const handleModify: MouseEventHandler<HTMLButtonElement> = (event) => {
-        event.preventDefault();
-        setModify(true);
+    const handleModify = () => {
+        setDoc(doc(notesCollection, id), { title, note, draft: {title, note}})
     }
 
-    const handleSaveSubmit = (event) => {
+    const handleSave = (event) => {
         event.preventDefault();
         const title = event.target.title.value;
         const note = event.target.note.value;
-        setDoc(doc(notesCollection, id), { title, note }).catch(console.error)
-        setModify(false);
+        setDoc(doc(notesCollection, id), { title, note })
+            .catch(console.error)
     }
 
     const handleDelete = (event) => {
         event.preventDefault();
         deleteDoc(doc(notesCollection, id)).catch(console.error)
     }
-    
+
+
     return (
         <>
             <li>
-
-                {modify ? (
-                    <form onSubmit={handleSaveSubmit}>
+                {draft ? (
+                    <form onSubmit={handleSave}>
                         <label htmlFor="title">Title:</label>
                         <input type="text" id="title" name="title" required defaultValue={title} /><br /><br />
                         <label htmlFor="note">Note:</label>
@@ -55,7 +61,6 @@ const Note = ({ note, title, id }: { note: string, title: string, id: string }) 
 }
 
 function MyNotes() {
-    const [creating, setCreating] = useState(false);
     const firestore = useFirestore();
     const auth = useAuth();
     const { uid } = auth.currentUser;
@@ -63,20 +68,14 @@ function MyNotes() {
     const { status, data: notes } = useFirestoreCollectionData(notesCollection, {
         idField: 'id',
     })
+
     if (status === 'loading') {
         return <>Loading</>;
     }
 
     const handleCreate = () => {
-        setCreating(true);
-    }
-
-    const handleCreateSubmit = (event) => {
-        event.preventDefault();
-        const title = event.target.title.value;
-        const note = event.target.note.value;
-        addDoc(notesCollection, { title, note }).catch(console.error)
-        setCreating(false);
+        addDoc(notesCollection, {title: '', note: '', draft: {title: '', note: ''}})
+            .catch(console.error)
     }
 
     return (
@@ -87,18 +86,14 @@ function MyNotes() {
             </section>
             <section>
                 <ul>
-                    {notes.map(({ note, title, id }) => <Note key={id} {...{ note, title, id }} />)}
+                    {notes.map((note: any) => 
+                        <Note 
+                            key={note.id} 
+                            {...note} 
+                        />
+                    )}
                 </ul>
             </section>
-            {creating && (
-                <form onSubmit={handleCreateSubmit}>
-                    <label htmlFor="title">Title:</label>
-                    <input type="text" id="title" name="title" required /><br /><br />
-                    <label htmlFor="note">Note:</label>
-                    <input type="text" id="note" name="note" required /><br /><br />
-                    <button type="submit">Save</button>
-                </form>
-            )}
         </main>
     )
 }
