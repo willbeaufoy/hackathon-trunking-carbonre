@@ -1,7 +1,58 @@
 import BumpUnauthorised from "@/components/bump-unauthorised";
-import { addDoc, collection } from "firebase/firestore";
-import { useState } from "react";
+import { addDoc, collection, deleteDoc, doc, setDoc } from "firebase/firestore";
+import { FormEventHandler, MouseEventHandler, useState } from "react";
 import { useAuth, useFirestore, useFirestoreCollectionData } from "reactfire";
+
+const Note = ({ note, title, id }: { note: string, title: string, id: string }) => {
+    const [modify, setModify] = useState(false);
+
+    const auth = useAuth();
+    const { uid } = auth.currentUser;
+    const firestore = useFirestore();
+    const notesCollection = collection(firestore, `users/${uid}/notes`);
+
+    const handleModify: MouseEventHandler<HTMLButtonElement> = (event) => {
+        event.preventDefault();
+        setModify(true);
+    }
+
+    const handleSaveSubmit = (event) => {
+        event.preventDefault();
+        const title = event.target.title.value;
+        const note = event.target.note.value;
+        setDoc(doc(notesCollection, id), { title, note }).catch(console.error)
+        setModify(false);
+    }
+
+    const handleDelete = (event) => {
+        event.preventDefault();
+        deleteDoc(doc(notesCollection, id)).catch(console.error)
+    }
+    
+    return (
+        <>
+            <li>
+
+                {modify ? (
+                    <form onSubmit={handleSaveSubmit}>
+                        <label htmlFor="title">Title:</label>
+                        <input type="text" id="title" name="title" required defaultValue={title} /><br /><br />
+                        <label htmlFor="note">Note:</label>
+                        <input type="text" id="note" name="note" required defaultValue={note} /><br /><br />
+                        <button type="submit">Save</button>
+                    </form>
+                ) : (
+                    <>
+                        <h3>{title}</h3>
+                        <p>{note}</p>
+                        <button type="button" onClick={handleModify}>Modify</button>
+                        <button type="button" onClick={handleDelete}>Delete</button>
+                    </>
+                )}
+            </li>
+        </>
+    )
+}
 
 function MyNotes() {
     const [creating, setCreating] = useState(false);
@@ -16,15 +67,16 @@ function MyNotes() {
         return <>Loading</>;
     }
 
-    function handleCreate() {
+    const handleCreate = () => {
         setCreating(true);
     }
 
-    function handleCreateSubmit(event) {
+    const handleCreateSubmit = (event) => {
         event.preventDefault();
-        const title = event.target.elements.title.value;
-        const note = event.target.elements.note.value;
+        const title = event.target.title.value;
+        const note = event.target.note.value;
         addDoc(notesCollection, { title, note }).catch(console.error)
+        setCreating(false);
     }
 
     return (
@@ -35,15 +87,7 @@ function MyNotes() {
             </section>
             <section>
                 <ul>
-                    {notes.map(({ note, title, id }) => (
-                        <>
-                            <li key={id}>
-                                <h3>{title}</h3>
-                                <p>{note}</p>
-                            </li>
-                            <button type="button">Modify</button>
-                        </>
-                    ))}
+                    {notes.map(({ note, title, id }) => <Note key={id} {...{ note, title, id }} />)}
                 </ul>
             </section>
             {creating && (

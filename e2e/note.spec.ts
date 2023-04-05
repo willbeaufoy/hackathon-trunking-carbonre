@@ -48,14 +48,17 @@ test('user can CRUD notes', async ({ page }) => {
     const note = `I am a ${getRandomChars()} note`;
     await page.getByLabel('Note').fill(note);
     await page.getByRole('button', { name: 'Save' }).click();
+    await expect(page.getByLabel('Title')).not.toBeVisible();
 
     //// read created note
     await expect(page.getByRole('heading', { name: noteTitle })).toBeVisible()
     await expect(page.getByText(note)).toBeVisible()
+    
+    //// TODO what about multiple notes?
 
     //// update note
     await page.getByRole('button', { name: 'Modify' }).click();
-
+    //// TODO modify not visible anymore
     const modifiedNoteTitle = `I am a modified ${getRandomChars()} note title`;
     await page.getByLabel('Title').fill(modifiedNoteTitle);
     const modifiedNote = `I am a modified ${getRandomChars()} note`;
@@ -64,6 +67,7 @@ test('user can CRUD notes', async ({ page }) => {
 
     await expect(page.getByRole('heading', { name: modifiedNoteTitle })).toBeVisible()
     await expect(page.getByText(modifiedNote)).toBeVisible()
+    //// TODO delete draft
     
     //// delete note
     await page.getByRole('button', { name: 'Delete' }).click();
