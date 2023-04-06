@@ -18,7 +18,7 @@ export default function Layout({ children }) {
                     ) : (
                         <>
                             <li><Link href="/sign-in">Sign in</Link></li>
-                            <li><Link href="/sign-up">Sign up</Link></li>
+                            <li><Link href="/sign-up">Sign uppppp</Link></li>
                         </>
                     )}
                 </ul>

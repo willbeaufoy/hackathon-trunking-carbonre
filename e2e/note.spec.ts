@@ -11,11 +11,11 @@ test('user can CRUD notes', async ({ page }) => {
 
     // go to landing page
     await page.goto('/');
-    await expect(page.getByRole('heading', { name: 'Home' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'ZenFocus' })).toBeVisible()
 
     //// sign up
     // now sign up
-    await page.getByRole('link', { name: 'Sign up' }).click();
+    await page.getByRole('link', { name: 'Sign uppppp' }).click();
     await expect(page.getByRole('heading', { name: 'Sign up' })).toBeVisible()
     await page.getByLabel('Email:').fill(myEmail);
     await page.getByLabel('Password:').fill(myPassword);

@@ -11,7 +11,7 @@ test('new users can sign up / sign in', async ({ page }) => {
 
     // go to landing page
     await page.goto('/');
-    await expect(page.getByRole('heading', { name: 'Home' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'ZenFocus' })).toBeVisible()
 
     // try login with not existing credentials
     await page.getByRole('link', { name: 'Sign in' }).click();
@@ -58,12 +58,12 @@ test('new users can sign up / sign in', async ({ page }) => {
     await page.getByRole('button', { name: 'Login' }).click();
 
     // once login, user details are visible
-    await page.getByRole('heading', { name: 'Home' }).click();
+    await page.getByRole('heading', { name: 'ZenFocus' }).click();
     await expect(page.getByText(myEmail)).toBeVisible()
 
     // user can sign out
     await page.getByRole('link', { name: 'Sign out' }).click();
-    await expect(page.getByRole('heading', { name: 'Home' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'ZenFocus' })).toBeVisible()
     await expect(page.getByText(myEmail)).not.toBeVisible()
 
 })
