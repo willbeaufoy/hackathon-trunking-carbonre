@@ -13,7 +13,7 @@ export default function Home() {
             </div>
           </div>
           <div className="flex flex-col space-y-4 mb-14 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
-            <a href="#" className="inline-flex justify-center shadow-xl items-center py-3 px-5 sm:w-96 text-base font-normal text-center text-black rounded-full bg-green-400 hover:bg-green-500 focus:ring-4 focus:ring-green-300 dark:focus:ring-green-900">
+            <a href="#" className="inline-flex justify-center shadow-xl items-center py-3 px-5 sm:w-96 text-base font-normal text-center text-black rounded-full bg-green-300 hover:bg-green-400 focus:ring-4 focus:ring-green-200 dark:focus:ring-green-900">
               Sign up
             </a>
           </div>
