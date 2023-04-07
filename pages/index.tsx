@@ -11,7 +11,7 @@ export default function Home() {
           <Image src='/logo.png' alt='logo' fill />
         </div>
         <h1 className="text-4xl mb-4 font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">ZenFocus</h1>
-        <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">Boost productivity with ZenFocus - the Agile Results app that helps you work flexibly and iteratively towards your goals.</p>
+        <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">Boost productivity with ZenFocus. <br/>The Agile Results app that helps you work flexibly and iteratively towards your goals.</p>
         <Link href="/sign-up" className="shadow-xl py-3 w-72 sm:w-96 text-base font-normal text-center text-black rounded-full bg-green-300 hover:bg-green-400 focus:ring-4 focus:ring-green-200 dark:focus:ring-green-900">
           Sign up
         </Link>
