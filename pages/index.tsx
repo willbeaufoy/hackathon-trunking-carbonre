@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 // TODO design broken on mobile portrait
+// try https://css-tricks.com/boxes-fill-height-dont-squish/
 export default function Home() {
   return (
     <div className="flex flex-col justify-center h-screen w-screen" >
