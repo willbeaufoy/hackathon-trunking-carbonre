@@ -15,7 +15,7 @@ test('user can CRUD notes', async ({ page }) => {
 
     //// sign up
     // now sign up
-    await page.getByRole('link', { name: 'Sign uppppp' }).click();
+    await page.getByRole('link', { name: 'Sign up' }).click();
     await expect(page.getByRole('heading', { name: 'Sign up' })).toBeVisible()
     await page.getByLabel('Email:').fill(myEmail);
     await page.getByLabel('Password:').fill(myPassword);
@@ -29,7 +29,7 @@ test('user can CRUD notes', async ({ page }) => {
 
     //// log in
     await page.goto('/');
-    await page.getByRole('link', { name: 'Sign in' }).click();
+    await page.getByRole('link', { name: 'I already have an account' }).click();
     await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
     await page.getByLabel('Email:').fill(myEmail);
     await page.getByLabel('Password:').fill(myPassword);

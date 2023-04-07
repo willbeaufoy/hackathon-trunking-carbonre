@@ -9,7 +9,7 @@ export default function BumpUnauthorised({ children }) {
 
   const { user } = data;
   if (!user) {
-    return <RedirectTo to="/sign-in"/>;
+    return <RedirectTo to="/"/>;
 
   }
 

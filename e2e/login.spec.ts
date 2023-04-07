@@ -14,7 +14,7 @@ test('new users can sign up / sign in', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'ZenFocus' })).toBeVisible()
 
     // try login with not existing credentials
-    await page.getByRole('link', { name: 'Sign in' }).click();
+    await page.getByRole('link', { name: 'I already have an account' }).click();
     await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
     await page.getByLabel('Email:').fill(myEmail);
     await page.getByLabel('Password:').fill(myPassword);
@@ -44,7 +44,7 @@ test('new users can sign up / sign in', async ({ page }) => {
 
     // go to landing page
     await page.goto('/');
-    await page.getByRole('link', { name: 'Sign in' }).click();
+    await page.getByRole('link', { name: 'I already have an account' }).click();
     await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
     await page.getByLabel('Email:').fill(myEmail);
 
@@ -58,7 +58,7 @@ test('new users can sign up / sign in', async ({ page }) => {
     await page.getByRole('button', { name: 'Login' }).click();
 
     // once login, user details are visible
-    await page.getByRole('heading', { name: 'ZenFocus' }).click();
+    await expect(page.getByRole('heading', { name: 'Notes' })).toBeVisible()
     await expect(page.getByText(myEmail)).toBeVisible()
 
     // user can sign out

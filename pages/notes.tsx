@@ -1,4 +1,5 @@
 import BumpUnauthorised from "@/components/bump-unauthorised";
+import Layout from "@/components/layout";
 import { addDoc, collection, deleteDoc, doc, setDoc } from "firebase/firestore";
 import { useAuth, useFirestore, useFirestoreCollectionData } from "reactfire";
 
@@ -10,7 +11,7 @@ interface NoteProps {
         note: string;
         title: string
     }
-  }
+}
 
 const Note = ({ id, note, title, draft }: NoteProps) => {
     const firestore = useFirestore();
@@ -19,7 +20,7 @@ const Note = ({ id, note, title, draft }: NoteProps) => {
     const notesCollection = collection(firestore, `users/${uid}/notes`);
 
     const handleModify = () => {
-        setDoc(doc(notesCollection, id), { title, note, draft: {title, note}})
+        setDoc(doc(notesCollection, id), { title, note, draft: { title, note } })
     }
 
     const handleSave = (event) => {
@@ -74,27 +75,29 @@ function MyNotes() {
     }
 
     const handleCreate = () => {
-        addDoc(notesCollection, {title: '', note: '', draft: {title: '', note: ''}})
+        addDoc(notesCollection, { title: '', note: '', draft: { title: '', note: '' } })
             .catch(console.error)
     }
 
     return (
-        <main>
-            <h1>Notes</h1>
-            <section>
-                <button onClick={handleCreate}>Create</button>
-            </section>
-            <section>
-                <ul>
-                    {notes.map((note: any) => 
-                        <Note 
-                            key={note.id} 
-                            {...note} 
-                        />
-                    )}
-                </ul>
-            </section>
-        </main>
+        <Layout>
+            <main>
+                <h1>Notes</h1>
+                <section>
+                    <button onClick={handleCreate}>Create</button>
+                </section>
+                <section>
+                    <ul>
+                        {notes.map((note: any) =>
+                            <Note
+                                key={note.id}
+                                {...note}
+                            />
+                        )}
+                    </ul>
+                </section>
+            </main>
+        </Layout>
     )
 }
 

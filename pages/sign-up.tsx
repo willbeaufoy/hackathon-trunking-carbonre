@@ -1,5 +1,6 @@
 import CheckNotSignedIn from '@/components/check-not-signed-in';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, sendEmailVerification, signInWithPopup } from 'firebase/auth';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from 'reactfire';
 
@@ -35,6 +36,12 @@ export function MySignup() {
       </section>
       <section>
         <button onClick={() => signInWithPopup(auth, googleAuthProvider)}>Sign in with Google</button>
+      </section>
+      <section>
+        <ul>
+          <li><Link href="/sign-in">Sign in</Link></li>
+          <li><Link href="/">Home</Link></li>
+        </ul>
       </section>
     </main>
   );
