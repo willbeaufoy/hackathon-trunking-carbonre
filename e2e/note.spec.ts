@@ -17,8 +17,8 @@ test('user can CRUD notes', async ({ page }) => {
     // now sign up
     await page.getByRole('link', { name: 'Sign up' }).click();
     await expect(page.getByRole('heading', { name: 'Sign up' })).toBeVisible()
-    await page.getByLabel('Email:').fill(myEmail);
-    await page.getByLabel('Password:').fill(myPassword);
+    await page.getByPlaceholder('Email').fill(myEmail);
+    await page.getByPlaceholder('Password').fill(myPassword);
     await page.getByRole('button', { name: 'Sign up' }).click();
 
     // simulate click the verify email
@@ -30,9 +30,9 @@ test('user can CRUD notes', async ({ page }) => {
     //// log in
     await page.goto('/');
     await page.getByRole('link', { name: 'I already have an account' }).click();
-    await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
-    await page.getByLabel('Email:').fill(myEmail);
-    await page.getByLabel('Password:').fill(myPassword);
+    await expect(page.getByRole('heading', { name: 'Login' })).toBeVisible()
+    await page.getByPlaceholder('Email').fill(myEmail);
+    await page.getByPlaceholder('Password').fill(myPassword);
     await page.getByRole('button', { name: 'Login' }).click();
 
     //// go to notes

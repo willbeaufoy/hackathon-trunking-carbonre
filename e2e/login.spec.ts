@@ -15,25 +15,25 @@ test('new users can sign up / sign in', async ({ page }) => {
 
     // try login with not existing credentials
     await page.getByRole('link', { name: 'I already have an account' }).click();
-    await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
-    await page.getByLabel('Email:').fill(myEmail);
-    await page.getByLabel('Password:').fill(myPassword);
+    await expect(page.getByRole('heading', { name: 'Login' })).toBeVisible()
+    await page.getByPlaceholder('Email').fill(myEmail);
+    await page.getByPlaceholder('Password').fill(myPassword);
     await page.getByRole('button', { name: 'Login' }).click();
     await expect(page.getByText('Invalid email or password')).toBeVisible()
     
     // now sign up
     await page.getByRole('link', { name: 'Sign up' }).click();
     await expect(page.getByRole('heading', { name: 'Sign up' })).toBeVisible()
-    await page.getByLabel('Email:').fill(myEmail);
-    await page.getByLabel('Password:').fill(myPassword);
+    await page.getByPlaceholder('Email').fill(myEmail);
+    await page.getByPlaceholder('Password').fill(myPassword);
     await page.getByRole('button', { name: 'Sign up' }).click();
     
     // email must be validated to sign in
     await expect(page.getByRole('heading', { name: 'Validate email' })).toBeVisible()
     await page.getByRole('link', { name: 'Sign in' }).click();
-    await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
-    await page.getByLabel('Email:').fill(myEmail);
-    await page.getByLabel('Password:').fill(myPassword);
+    await expect(page.getByRole('heading', { name: 'Login' })).toBeVisible()
+    await page.getByPlaceholder('Email').fill(myEmail);
+    await page.getByPlaceholder('Password').fill(myPassword);
     await page.getByRole('button', { name: 'Login' }).click();
     await expect(page.getByRole('heading', { name: 'Validate email' })).toBeVisible()
 
@@ -45,16 +45,16 @@ test('new users can sign up / sign in', async ({ page }) => {
     // go to landing page
     await page.goto('/');
     await page.getByRole('link', { name: 'I already have an account' }).click();
-    await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
-    await page.getByLabel('Email:').fill(myEmail);
+    await expect(page.getByRole('heading', { name: 'Login' })).toBeVisible()
+    await page.getByPlaceholder('Email').fill(myEmail);
 
     // wrong password -> no login
-    await page.getByLabel('Password:').fill(myPassword + 'typo');
+    await page.getByPlaceholder('Password').fill(myPassword + 'typo');
     await page.getByRole('button', { name: 'Login' }).click();
     await expect(page.getByText('Invalid email or password')).toBeVisible()
 
     // right password -> login
-    await page.getByLabel('Password:').fill(myPassword);
+    await page.getByPlaceholder('Password').fill(myPassword);
     await page.getByRole('button', { name: 'Login' }).click();
 
     // once login, user details are visible
