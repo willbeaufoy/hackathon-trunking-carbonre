@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "firebase:dev": "firebase emulators:start",
+    "firebase:start": "firebase emulators:start",
+    "firebase:dev": "firebase emulators:exec 'npm run dev'",
     "firebase:firestore:rules:deploy": "firebase deploy --only firestore:rules",
     "test:playwright": "playwright test"
   },

@@ -80,8 +80,9 @@ export default defineConfig({
   // outputDir: 'test-results/',
 
   /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run dev',
-  //   port: 3000,
-  // },
+  // globalSetup: require.resolve('./global-setup',
+  webServer: process.env.CI === 'true' && {
+    command: "npm run firebase:dev",
+    port: 3000,
+  },
 });
