@@ -1,39 +1,15 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { getRandomChars } from './tools';
-import axios from 'axios';
-import { setTimeout } from 'timers/promises';
+import { signupAndLogin } from './user-management';
 
 test('user can CRUD notes', async ({ page }) => {
     const myEmail = `test-${getRandomChars()}@test.com`;
     const myPassword = 'password';
 
-    ///// unauthorised will be bumped
+    ///// TODO unauthorised will be bumped
 
     // go to landing page
-    await page.goto('/');
-    await expect(page.getByRole('heading', { name: 'ZenFocus' })).toBeVisible()
-
-    //// sign up
-    // now sign up
-    await page.getByRole('link', { name: 'Sign up' }).click();
-    await expect(page.getByRole('heading', { name: 'Sign up' })).toBeVisible()
-    await page.getByPlaceholder('Email').fill(myEmail);
-    await page.getByPlaceholder('Password').fill(myPassword);
-    await page.getByRole('button', { name: 'Sign up' }).click();
-
-    // simulate click the verify email
-    await setTimeout(100)
-    const resp = await axios.get('http://localhost:9099/emulator/v1/projects/nextjs13-vercel/oobCodes');
-    const {oobLink} = resp.data.oobCodes.find(({email}) => email === myEmail);
-    await axios.get(oobLink);
-
-    //// log in
-    await page.goto('/');
-    await page.getByRole('link', { name: 'I already have an account' }).click();
-    await expect(page.getByRole('heading', { name: 'Login' })).toBeVisible()
-    await page.getByPlaceholder('Email').fill(myEmail);
-    await page.getByPlaceholder('Password').fill(myPassword);
-    await page.getByRole('button', { name: 'Login' }).click();
+    await signupAndLogin(page, myEmail, myPassword);
 
     //// go to notes
     await page.getByRole('link', { name: 'Notes' }).click();
@@ -75,3 +51,5 @@ test('user can CRUD notes', async ({ page }) => {
     await expect(page.getByRole('heading', { name: modifiedNoteTitle })).not.toBeVisible()
     await expect(page.getByRole('heading', { name: noteTitle })).not.toBeVisible()  
 })
+
+
