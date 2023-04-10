@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import axios from 'axios';
+import { setTimeout } from 'timers/promises';
 
 export async function validateEmail(myEmail: string) {
     const resp = await axios.get('http://localhost:9099/emulator/v1/projects/nextjs13-vercel/oobCodes');

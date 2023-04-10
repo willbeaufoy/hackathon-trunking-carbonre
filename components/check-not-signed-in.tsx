@@ -11,7 +11,7 @@ export default function CheckNotSignedIn({ children }) {
 
   const { user } = data;
   if (user && user.emailVerified) {
-    return <RedirectTo to="/notes"/>;
+    return <RedirectTo to="/app/daily/today"/>;
   }
 
   if (user && !user.emailVerified && router.pathname !== '/validate-email') {
