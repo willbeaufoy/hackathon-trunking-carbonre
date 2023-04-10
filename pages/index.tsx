@@ -3,15 +3,15 @@ import Link from 'next/link';
 
 export default function Home() {
 	return (
-		<main className="min-h-full flex flex-col justify-evenly w-full items-center bg-white dark:bg-gray-900 mx-auto max-w-xs sm:max-w-screen-md text-center">
-			<div className="w-32 h-32 relative md:w-48 md:h-48">
+		<main className="mx-auto flex min-h-full w-full max-w-xs flex-col items-center justify-evenly bg-white text-center dark:bg-gray-900 sm:max-w-screen-md">
+			<div className="relative h-32 w-32 md:h-48 md:w-48">
 				<Image src="/logo.png" alt="logo" fill />
 			</div>
 			<section className="after:content-['\a0']">
-				<h1 className="text-4xl mb-4 font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+				<h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
 					ZenFocus
 				</h1>
-				<p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+				<p className="text-lg font-normal text-gray-500 dark:text-gray-400 lg:text-xl">
 					Boost productivity with ZenFocus. <br />
 					The Agile Results app that helps you work flexibly and iteratively
 					towards your goals.
@@ -19,7 +19,7 @@ export default function Home() {
 			</section>
 			<Link
 				href="/sign-up"
-				className="block shadow-xl py-3 w-72 sm:w-96 text-base font-normal text-center text-black rounded-full bg-green-300 hover:bg-green-400 focus:ring-4 focus:ring-green-200 dark:focus:ring-green-900"
+				className="block w-72 rounded-full bg-green-300 py-3 text-center text-base font-normal text-black shadow-xl hover:bg-green-400 focus:ring-4 focus:ring-green-200 dark:focus:ring-green-900 sm:w-96"
 			>
 				Sign up
 			</Link>

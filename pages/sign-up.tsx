@@ -29,43 +29,43 @@ export function MySignup() {
 		signInWithPopup(auth, googleAuthProvider);
 
 	return (
-		<main className="flex flex-col items-center h-screen w-screen bg-white dark:bg-gray-900 mx-auto max-w-xs sm:max-w-screen-md text-center">
-			<h3 className="mt-4 mb-8">Sign up</h3>
+		<main className="mx-auto flex h-screen w-screen max-w-xs flex-col items-center bg-white text-center dark:bg-gray-900 sm:max-w-screen-md">
+			<h3 className="mb-8 mt-4">Sign up</h3>
 			<form
 				onSubmit={handleFormSubmit}
-				className="flex-1 flex flex-col space-y-8"
+				className="flex flex-1 flex-col space-y-8"
 			>
 				<input
 					type="email"
 					id="email"
 					aria-label="Email"
-					className="bg-gray-50 h-10 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+					className="block h-10 w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 					placeholder="Email"
 				/>
 				<input
 					type="password"
 					id="password"
 					aria-label="Password"
-					className="bg-gray-50 h-10 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+					className="block h-10 w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 					placeholder="Password"
 				/>
 				<button
 					type="submit"
-					className="shadow-xl py-3 w-72 sm:w-96 text-base font-normal text-center text-black rounded-full bg-green-300 hover:bg-green-400 focus:ring-4 focus:ring-green-200 dark:focus:ring-green-900"
+					className="w-72 rounded-full bg-green-300 py-3 text-center text-base font-normal text-black shadow-xl hover:bg-green-400 focus:ring-4 focus:ring-green-200 dark:focus:ring-green-900 sm:w-96"
 				>
 					Sign up
 				</button>
 			</form>
 
-			<section className="flex-1 flex flex-col space-y-8">
+			<section className="flex flex-1 flex-col space-y-8">
 				<button
 					type="button"
 					onClick={handleContinueWithGoogle}
-					className="sm:w-96 text-base font-normal text-center rounded-full hover:bg-green-400 focus:ring-green-200 dark:focus:ring-green-900 text-white shadow-xl py-3 w-72 bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 
-        focus:outline-none focus:ring-[#4285F4]/50  inline-flex items-center dark:focus:ring-[#4285F4]/55 p-6"
+					className="dark:focus:ring-[#4285F4]/55 inline-flex w-72 items-center rounded-full bg-[#4285F4] p-6 py-3 text-center text-base font-normal text-white shadow-xl hover:bg-[#4285F4]/90 hover:bg-green-400 
+        focus:outline-none focus:ring-4  focus:ring-[#4285F4]/50 focus:ring-green-200 dark:focus:ring-green-900 sm:w-96"
 				>
 					<svg
-						className="w-5 h-5"
+						className="h-5 w-5"
 						aria-hidden="true"
 						focusable="false"
 						data-prefix="fab"
