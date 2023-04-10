@@ -10,7 +10,8 @@
     "firebase:start": "firebase emulators:start",
     "firebase:dev": "firebase emulators:exec 'npm run dev'",
     "firebase:firestore:rules:deploy": "firebase deploy --only firestore:rules",
-    "test:playwright": "playwright test"
+    "test:playwright": "playwright test",
+    "prepare": "husky install"
   },
   "dependencies": {
     "eslint-config-next": "13.2.1",
@@ -37,16 +38,11 @@
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-prettier": "^4.2.1",
     "flowbite-typography": "^1.0.3",
-    "husky": "^8.0.3",
+    "husky": "^8.0.0",
     "lint-staged": "^13.2.1",
     "postcss": "^8.4.21",
     "prettier": "^2.8.7",
     "tailwindcss": "^3.3.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
