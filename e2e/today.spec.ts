@@ -2,35 +2,57 @@ import { expect, test } from '@playwright/test';
 import { getRandomChars } from './tools';
 import { signupAndLogin } from './user-management';
 
-test('today page', async ({ page }) => { // TODO
+// AS A user
+// I WANT TO be able to create a 3 weekly outcomes
+// SO THAT I can plan my week
+test('create weekly outcomes', async ({ page }) => {
     const myEmail = `test-${getRandomChars()}@test.com`;
     const myPassword = 'password';
 
-    ///// TODO unauthorised will be bumped
-
-    // // go to landing page
     await signupAndLogin(page, myEmail, myPassword);
-
-    // logs in the Today page
     await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible();
 
-    //// new users
-    // <--- DELETE
-    // no weekly outcomes 
-    const all = await page.getByPlaceholder("Enter your weekly outcome").all();
-    const values = await Promise.all(all.map(l => l.inputValue()))
-    expect(values).toEqual(['', '', '']);
-    /// ---> DELETE
+    // in the page, find the section that contains the weekly outcomes heading
+    const weeklyOutcomesSection = page.getByRole('region', { name: 'Weekly Outcomes' });
 
-    // fill my weekly outcomes
-    // * select hot spot
-    // * fill input
+    const weeklyOutcomesFixture = [
+        { hotSpot: 'Mind', weeklyOutcome: 'I am a Mind weekly outcome' },
+        { hotSpot: 'Body', weeklyOutcome: 'I am a Body weekly outcome' },
+        { hotSpot: 'Relationships', weeklyOutcome: 'I am a Relationships weekly outcome' },
+    ];
 
-    // fill my daily outcomes
-    // fill my retro
+    const weeklyOutcomes = await weeklyOutcomesSection.getByRole('listitem').all();
+    expect(weeklyOutcomes.length).toBe(3);
+    expect(weeklyOutcomes.length).toBe(3);
 
-    // go to tomorrow
-    // find my weekly outcomes already filled
+    // for each of the thre weeklyOutcomesList, fill the hot spot and the weekly outcome using the data from the array and save
+    for await (const [index, weeklyOutcome] of weeklyOutcomes.entries()) {
+        await weeklyOutcome.getByRole('combobox', { name: 'Hot spot' }).selectOption(weeklyOutcomesFixture[index].hotSpot);
+        await weeklyOutcome.getByPlaceholder("Enter your weekly outcome").fill(weeklyOutcomesFixture[index].weeklyOutcome);
+        await weeklyOutcome.getByRole('button', { name: 'Save' }).click();
+    }
+
+
+    // if I close the browser and come back to the page
+    await page.reload();
+    
+    //I should see the weekly outcomes I just created
+    const refreshedWeeklyOutcomesSection = page.getByRole('region', { name: 'Weekly Outcomes' });
+    const refreshedWeeklyOutcomesList = await refreshedWeeklyOutcomesSection.getByRole('listitem').all();
+    expect(refreshedWeeklyOutcomesList.length).toBe(3);
+    expect(refreshedWeeklyOutcomesList[0].textContent()).toContain(weeklyOutcomesFixture[0].weeklyOutcome);
+    expect(refreshedWeeklyOutcomesList[0].textContent()).toContain(weeklyOutcomesFixture[0].hotSpot);
+    expect(refreshedWeeklyOutcomesList[1].textContent()).toContain(weeklyOutcomesFixture[1].weeklyOutcome);
+    expect(refreshedWeeklyOutcomesList[1].textContent()).toContain(weeklyOutcomesFixture[1].hotSpot);
+    expect(refreshedWeeklyOutcomesList[2].textContent()).toContain(weeklyOutcomesFixture[2].weeklyOutcome);
+    expect(refreshedWeeklyOutcomesList[2].textContent()).toContain(weeklyOutcomesFixture[2].hotSpot);
 })
 
 
+// AS A user
+// I WANT TO be able to create a 3 daily outcomes
+// SO THAT I can plan my day
+
+// AS A user
+// I WANT TO be able to create a few retro notes
+// SO THAT I can save note on my day
