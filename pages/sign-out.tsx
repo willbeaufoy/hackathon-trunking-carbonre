@@ -3,19 +3,19 @@ import { useEffect } from 'react';
 import { useAuth } from 'reactfire';
 
 export function MySignout() {
-  const auth = useAuth();
-  
-  useEffect(() => {
-    auth.signOut();
-  }, [auth])
+	const auth = useAuth();
 
-  return null;
+	useEffect(() => {
+		auth.signOut();
+	}, [auth]);
+
+	return null;
 }
 
 export default function Signup() {
-  return (
-    <BumpUnauthorised>
-      <MySignout/>
-    </BumpUnauthorised>
-  );
-};
+	return (
+		<BumpUnauthorised>
+			<MySignout />
+		</BumpUnauthorised>
+	);
+}
