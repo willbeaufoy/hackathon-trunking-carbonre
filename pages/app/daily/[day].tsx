@@ -3,36 +3,23 @@ import Layout from '@/components/layout';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useAuth, useFirestore, useFirestoreDocData } from 'reactfire';
+import {
+	useAuth,
+	useFirestore,
+	useFirestoreCollectionData,
+	useFirestoreDocData,
+} from 'reactfire';
 
-function WeeklyOutcome() {
-	// how to use reactfire to get an element out of a collection?
-	const firestore = useFirestore();
-	const auth = useAuth();
-	const { uid } = auth.currentUser;
-	const daysCollection = collection(firestore, `users/${uid}/days`);
+interface WeeklyOutcomeProps {
+	hotSpot?: string;
+	outcome?: string;
+	handleSave: (event: React.FormEvent<HTMLFormElement>) => void;
+}
 
-	// get 1 from days collection
-	const day = doc(daysCollection, '1');
-	const { status, data: dayData } = useFirestoreDocData(day);
-
-	useEffect(() => {
-		setDoc(doc(daysCollection, '1'), {
-			weekly: {
-				hotSpot: 'Mind',
-				outcome: 'I am a Mind weekly outcome',
-			},
-		}).catch(console.error);
-	}, [daysCollection]);
-
-	if (status === 'loading') return <p>Loading...</p>;
-
+function WeeklyOutcome({ hotSpot, outcome, handleSave }: WeeklyOutcomeProps) {
 	return (
-		<form onSubmit={e => e.preventDefault()}>
-			<select
-				aria-label="Hot spot"
-				defaultValue={dayData?.weekly.hotSpot || ''}
-			>
+		<form onSubmit={handleSave}>
+			<select name="hotSpot" aria-label="Hot spot" defaultValue={hotSpot || ''}>
 				<option value="" disabled>
 					Select a hot spot
 				</option>
@@ -42,8 +29,9 @@ function WeeklyOutcome() {
 			</select>
 			<input
 				type="text"
+				name="outcome"
 				placeholder="Enter your Weekly outcome"
-				defaultValue={dayData?.weekly.outcome}
+				defaultValue={outcome || ''}
 			/>
 			<button type="submit">Save</button>
 		</form>
@@ -53,6 +41,53 @@ function WeeklyOutcome() {
 function Page() {
 	const router = useRouter();
 	const { day } = router.query;
+
+	// get a collection of weekly outcomes from firestore at this path users/${uid}/weeks/thisWeek/weeklyOutcomes
+	// if there is no collection, create one with 3 empty objects
+	const firestore = useFirestore();
+	const auth = useAuth();
+	const { uid } = auth.currentUser;
+	const weeklyOutcomesCollection = collection(
+		firestore,
+		`users/${uid}/weeks/thisWeek/weeklyOutcomes`,
+	);
+	const { status, data: weeklyOutcomes } = useFirestoreCollectionData(
+		weeklyOutcomesCollection,
+		{
+			idField: 'id',
+		},
+	);
+
+	const handleSave = id => event => {
+		event.preventDefault();
+		const hotSpot = event.target.elements.hotSpot.value;
+		const outcome = event.target.elements.outcome.value;
+		setDoc(doc(weeklyOutcomesCollection, id), { hotSpot, outcome }).catch(
+			console.error,
+		);
+	};
+
+	useEffect(() => {
+		if (status !== 'success') return;
+		if (!weeklyOutcomes || weeklyOutcomes.length === 0) {
+			const promises = [...Array(3)].map((_, i) =>
+				setDoc(doc(weeklyOutcomesCollection, i.toString()), {
+					hotSpot: '',
+					outcome: '',
+				}),
+			);
+			Promise.all(promises).catch(console.error);
+		}
+	}, [status, weeklyOutcomes, weeklyOutcomesCollection]);
+
+	if (status === 'loading') {
+		return <p>Loading...</p>;
+	}
+
+	if (!weeklyOutcomes || weeklyOutcomes.length === 0) {
+		return <></>;
+	}
+
 	return (
 		<>
 			<br />
@@ -64,15 +99,15 @@ function Page() {
 				<section aria-label="Weekly Outcomes">
 					<h2>Weekly Outcomes</h2>
 					<ul>
-						<li>
-							<WeeklyOutcome />
-						</li>
-						<li>
-							<WeeklyOutcome />
-						</li>
-						<li>
-							<WeeklyOutcome />
-						</li>
+						{weeklyOutcomes.map(({ hotSpot, outcome, id }) => (
+							<li key={id}>
+								<WeeklyOutcome
+									hotSpot={hotSpot}
+									outcome={outcome}
+									handleSave={handleSave(id)}
+								/>
+							</li>
+						))}
 					</ul>
 				</section>
 				<section>
