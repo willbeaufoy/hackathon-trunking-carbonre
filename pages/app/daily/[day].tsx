@@ -6,8 +6,8 @@ function WeeklyOutcome() {
 
 	return (
 		<form onSubmit={e => e.preventDefault()}>
-			<select aria-label="Hot spot">
-				<option value="" disabled selected>
+			<select aria-label="Hot spot" defaultValue="">
+				<option value="" disabled>
 					Select a hot spot
 				</option>
 				<option value="mind">Mind</option>
