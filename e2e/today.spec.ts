@@ -30,7 +30,6 @@ test('create weekly outcomes', async ({ page }) => {
 		.getByRole('listitem')
 		.all();
 	expect(weeklyOutcomes.length).toBe(3);
-	expect(weeklyOutcomes.length).toBe(3);
 
 	// for each of the thre weeklyOutcomesList, fill the hot spot and the weekly outcome using the data from the array and save
 	for await (const [index, weeklyOutcome] of weeklyOutcomes.entries()) {
@@ -54,24 +53,32 @@ test('create weekly outcomes', async ({ page }) => {
 		.getByRole('listitem')
 		.all();
 	expect(refreshedWeeklyOutcomesList.length).toBe(3);
-	expect(refreshedWeeklyOutcomesList[0].textContent()).toContain(
-		weeklyOutcomesFixture[0].weeklyOutcome,
-	);
-	expect(refreshedWeeklyOutcomesList[0].textContent()).toContain(
-		weeklyOutcomesFixture[0].hotSpot,
-	);
-	expect(refreshedWeeklyOutcomesList[1].textContent()).toContain(
-		weeklyOutcomesFixture[1].weeklyOutcome,
-	);
-	expect(refreshedWeeklyOutcomesList[1].textContent()).toContain(
-		weeklyOutcomesFixture[1].hotSpot,
-	);
-	expect(refreshedWeeklyOutcomesList[2].textContent()).toContain(
-		weeklyOutcomesFixture[2].weeklyOutcome,
-	);
-	expect(refreshedWeeklyOutcomesList[2].textContent()).toContain(
-		weeklyOutcomesFixture[2].hotSpot,
-	);
+	// expect(await refreshedWeeklyOutcomesList[0].innerHTML()).toEqual('')
+	// check that the Mind option is selected
+
+	expect(
+		await refreshedWeeklyOutcomesList[0]
+			.getByRole('combobox', { name: 'Hot spot' })
+			.inputValue(),
+	).toEqual(weeklyOutcomesFixture[0].hotSpot);
+
+	expect(
+		await refreshedWeeklyOutcomesList[0]
+			.getByPlaceholder('Enter your weekly outcome')
+			.inputValue(),
+	).toEqual(weeklyOutcomesFixture[0].weeklyOutcome);
+
+	expect(
+		await refreshedWeeklyOutcomesList[1]
+			.getByRole('combobox', { name: 'Hot spot' })
+			.inputValue(),
+	).toEqual(weeklyOutcomesFixture[1].hotSpot);
+
+	expect(
+		await refreshedWeeklyOutcomesList[2]
+			.getByPlaceholder('Enter your weekly outcome')
+			.inputValue(),
+	).toEqual(weeklyOutcomesFixture[2].weeklyOutcome);
 });
 
 // AS A user

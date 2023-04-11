@@ -1,31 +1,60 @@
+import BumpUnauthorised from '@/components/bump-unauthorised';
 import Layout from '@/components/layout';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useAuth, useFirestore, useFirestoreDocData } from 'reactfire';
 
 function WeeklyOutcome() {
 	// how to use reactfire to get an element out of a collection?
+	const firestore = useFirestore();
+	const auth = useAuth();
+	const { uid } = auth.currentUser;
+	const daysCollection = collection(firestore, `users/${uid}/days`);
+
+	// get 1 from days collection
+	const day = doc(daysCollection, '1');
+	const { status, data: dayData } = useFirestoreDocData(day);
+
+	useEffect(() => {
+		setDoc(doc(daysCollection, '1'), {
+			weekly: {
+				hotSpot: 'Mind',
+				outcome: 'I am a Mind weekly outcome',
+			},
+		}).catch(console.error);
+	}, [daysCollection]);
+
+	if (status === 'loading') return <p>Loading...</p>;
 
 	return (
 		<form onSubmit={e => e.preventDefault()}>
-			<select aria-label="Hot spot" defaultValue="">
+			<select
+				aria-label="Hot spot"
+				defaultValue={dayData?.weekly.hotSpot || ''}
+			>
 				<option value="" disabled>
 					Select a hot spot
 				</option>
-				<option value="mind">Mind</option>
-				<option value="body">Body</option>
-				<option value="relationships">Relationships</option>
+				<option value="Mind">Mind</option>
+				<option value="Body">Body</option>
+				<option value="Relationships">Relationships</option>
 			</select>
-			<input type="text" placeholder="Enter your Weekly outcome" />
+			<input
+				type="text"
+				placeholder="Enter your Weekly outcome"
+				defaultValue={dayData?.weekly.outcome}
+			/>
 			<button type="submit">Save</button>
 		</form>
 	);
 }
 
-export default function DailyFocus() {
+function Page() {
 	const router = useRouter();
 	const { day } = router.query;
-
 	return (
-		<Layout>
+		<>
 			<br />
 			<main className="format mx-auto max-w-xs sm:max-w-screen-md">
 				<section>
@@ -109,6 +138,16 @@ export default function DailyFocus() {
 					</ul>
 				</section>
 			</main>
-		</Layout>
+		</>
+	);
+}
+
+export default function DailyFocus() {
+	return (
+		<BumpUnauthorised>
+			<Layout>
+				<Page />
+			</Layout>
+		</BumpUnauthorised>
 	);
 }
