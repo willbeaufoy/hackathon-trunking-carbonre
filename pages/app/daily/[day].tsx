@@ -23,8 +23,13 @@ function WeeklyOutcome({ hotSpot, outcome, handleSave }: WeeklyOutcomeProps) {
 	};
 
 	return (
-		<form onSubmit={handleOnSubmit}>
-			<select name="hotSpot" aria-label="Hot spot" defaultValue={hotSpot || ''}>
+		<form onSubmit={handleOnSubmit} className="space-y-2">
+			<select
+				name="hotSpot"
+				aria-label="Hot spot"
+				defaultValue={hotSpot || ''}
+				className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+			>
 				<option value="" disabled>
 					Select a hot spot
 				</option>
@@ -32,13 +37,20 @@ function WeeklyOutcome({ hotSpot, outcome, handleSave }: WeeklyOutcomeProps) {
 				<option value="Body">Body</option>
 				<option value="Relationships">Relationships</option>
 			</select>
-			<input
-				type="text"
+			<textarea
+				className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+				rows={3}
 				name="outcome"
 				placeholder="Enter your Weekly outcome"
 				defaultValue={outcome || ''}
 			/>
-			<button type="submit">Save</button>
+			<button
+				type="submit"
+				className="block w-36 rounded-full bg-green-300 bg-center py-3 text-center text-base font-normal text-black shadow-xl hover:bg-green-400 focus:ring-4 focus:ring-green-200 dark:focus:ring-green-900 sm:w-72"
+			>
+				Save
+			</button>
+			<br />
 		</form>
 	);
 }
@@ -98,7 +110,7 @@ function Page() {
 				</section>
 				<section aria-label="Weekly Outcomes">
 					<h2>Weekly Outcomes</h2>
-					<ul>
+					<ul className="list-inside list-none space-y-8 pl-0 text-gray-500 dark:text-gray-400">
 						{weeklyOutcomes.map(({ hotSpot, outcome, id }) => (
 							<li key={id}>
 								<WeeklyOutcome
