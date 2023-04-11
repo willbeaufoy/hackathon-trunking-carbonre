@@ -2,23 +2,28 @@ import BumpUnauthorised from '@/components/bump-unauthorised';
 import Layout from '@/components/layout';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import {
-	useAuth,
-	useFirestore,
-	useFirestoreCollectionData,
-	useFirestoreDocData,
-} from 'reactfire';
+import { useCallback, useEffect } from 'react';
+import { useAuth, useFirestore, useFirestoreCollectionData } from 'reactfire';
 
-interface WeeklyOutcomeProps {
-	hotSpot?: string;
-	outcome?: string;
-	handleSave: (event: React.FormEvent<HTMLFormElement>) => void;
+interface WeeklyOutcome {
+	hotSpot: string;
+	outcome: string;
+}
+
+interface WeeklyOutcomeProps extends WeeklyOutcome {
+	handleSave: (weeklyOutcome: WeeklyOutcome) => void;
 }
 
 function WeeklyOutcome({ hotSpot, outcome, handleSave }: WeeklyOutcomeProps) {
+	const handleOnSubmit = event => {
+		event.preventDefault();
+		const hotSpot = event.target.elements.hotSpot.value;
+		const outcome = event.target.elements.outcome.value;
+		handleSave({ hotSpot, outcome });
+	};
+
 	return (
-		<form onSubmit={handleSave}>
+		<form onSubmit={handleOnSubmit}>
 			<select name="hotSpot" aria-label="Hot spot" defaultValue={hotSpot || ''}>
 				<option value="" disabled>
 					Select a hot spot
@@ -38,12 +43,16 @@ function WeeklyOutcome({ hotSpot, outcome, handleSave }: WeeklyOutcomeProps) {
 	);
 }
 
+const emptyWeeklyOutcome = {
+	hotSpot: '',
+	outcome: '',
+};
+const idField = 'id';
+
 function Page() {
 	const router = useRouter();
 	const { day } = router.query;
 
-	// get a collection of weekly outcomes from firestore at this path users/${uid}/weeks/thisWeek/weeklyOutcomes
-	// if there is no collection, create one with 3 empty objects
 	const firestore = useFirestore();
 	const auth = useAuth();
 	const { uid } = auth.currentUser;
@@ -53,39 +62,30 @@ function Page() {
 	);
 	const { status, data: weeklyOutcomes } = useFirestoreCollectionData(
 		weeklyOutcomesCollection,
-		{
-			idField: 'id',
-		},
+		{ idField },
 	);
 
-	const handleSave = id => event => {
-		event.preventDefault();
-		const hotSpot = event.target.elements.hotSpot.value;
-		const outcome = event.target.elements.outcome.value;
-		setDoc(doc(weeklyOutcomesCollection, id), { hotSpot, outcome }).catch(
-			console.error,
-		);
-	};
+	const saveWeeklyOutcome = useCallback(
+		(id: string) => (outcome: WeeklyOutcome) =>
+			setDoc(doc(weeklyOutcomesCollection, id), outcome).catch(console.error),
+		[weeklyOutcomesCollection],
+	);
 
 	useEffect(() => {
 		if (status !== 'success') return;
 		if (!weeklyOutcomes || weeklyOutcomes.length === 0) {
-			const promises = [...Array(3)].map((_, i) =>
-				setDoc(doc(weeklyOutcomesCollection, i.toString()), {
-					hotSpot: '',
-					outcome: '',
-				}),
+			[...Array(3)].map((_, i) =>
+				saveWeeklyOutcome(`${i}`)(emptyWeeklyOutcome),
 			);
-			Promise.all(promises).catch(console.error);
 		}
-	}, [status, weeklyOutcomes, weeklyOutcomesCollection]);
+	}, [status, weeklyOutcomes, saveWeeklyOutcome]);
 
 	if (status === 'loading') {
 		return <p>Loading...</p>;
 	}
 
 	if (!weeklyOutcomes || weeklyOutcomes.length === 0) {
-		return <></>;
+		return <p>Loading...</p>;
 	}
 
 	return (
@@ -104,7 +104,7 @@ function Page() {
 								<WeeklyOutcome
 									hotSpot={hotSpot}
 									outcome={outcome}
-									handleSave={handleSave(id)}
+									handleSave={saveWeeklyOutcome(id)}
 								/>
 							</li>
 						))}

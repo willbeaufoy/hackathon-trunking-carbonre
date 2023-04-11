@@ -5,80 +5,61 @@ import { signupAndLogin } from './user-management';
 // AS A user
 // I WANT TO be able to create a 3 weekly outcomes
 // SO THAT I can plan my week
-test('create weekly outcomes', async ({ page }) => {
+test('create weekly outcomes and persist them', async ({ page }) => {
+	const outcomesFixture = [
+		{ hotSpot: 'Mind', outcome: 'I am a Mind weekly outcome' },
+		{ hotSpot: 'Body', outcome: 'I am a Body weekly outcome' },
+		{
+			hotSpot: 'Relationships',
+			outcome: 'I am a Relationships weekly outcome',
+		},
+	];
+
 	const myEmail = `test-${getRandomChars()}@test.com`;
 	const myPassword = 'password';
 
 	await signupAndLogin(page, myEmail, myPassword);
 	await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible();
 
-	// in the page, find the section that contains the weekly outcomes heading
-	const weeklyOutcomesSection = page.getByRole('region', {
-		name: 'Weekly Outcomes',
-	});
+	{
+		const outcomes = await page
+			.getByRole('region', { name: 'Weekly Outcomes' })
+			.getByRole('listitem')
+			.all();
+		expect(outcomes.length).toBe(3);
 
-	const weeklyOutcomesFixture = [
-		{ hotSpot: 'Mind', weeklyOutcome: 'I am a Mind weekly outcome' },
-		{ hotSpot: 'Body', weeklyOutcome: 'I am a Body weekly outcome' },
-		{
-			hotSpot: 'Relationships',
-			weeklyOutcome: 'I am a Relationships weekly outcome',
-		},
-	];
-
-	const weeklyOutcomes = await weeklyOutcomesSection
-		.getByRole('listitem')
-		.all();
-	expect(weeklyOutcomes.length).toBe(3);
-
-	// for each of the thre weeklyOutcomesList, fill the hot spot and the weekly outcome using the data from the array and save
-	for await (const [index, weeklyOutcome] of weeklyOutcomes.entries()) {
-		await weeklyOutcome
-			.getByRole('combobox', { name: 'Hot spot' })
-			.selectOption(weeklyOutcomesFixture[index].hotSpot);
-		await weeklyOutcome
-			.getByPlaceholder('Enter your weekly outcome')
-			.fill(weeklyOutcomesFixture[index].weeklyOutcome);
-		await weeklyOutcome.getByRole('button', { name: 'Save' }).click();
+		for await (const [index, outcome] of outcomes.entries()) {
+			await outcome
+				.getByRole('combobox', { name: 'Hot spot' })
+				.selectOption(outcomesFixture[index].hotSpot);
+			await outcome
+				.getByPlaceholder('Enter your weekly outcome')
+				.fill(outcomesFixture[index].outcome);
+			await outcome.getByRole('button', { name: 'Save' }).click();
+		}
 	}
 
-	// if I close the browser and come back to the page
 	await page.reload();
 
-	//I should see the weekly outcomes I just created
-	const refreshedWeeklyOutcomesSection = page.getByRole('region', {
-		name: 'Weekly Outcomes',
-	});
-	const refreshedWeeklyOutcomesList = await refreshedWeeklyOutcomesSection
-		.getByRole('listitem')
-		.all();
-	expect(refreshedWeeklyOutcomesList.length).toBe(3);
-	// expect(await refreshedWeeklyOutcomesList[0].innerHTML()).toEqual('')
-	// check that the Mind option is selected
+	{
+		const outcomes = await page
+			.getByRole('region', { name: 'Weekly Outcomes' })
+			.getByRole('listitem')
+			.all();
+		expect(outcomes.length).toBe(3);
 
-	expect(
-		await refreshedWeeklyOutcomesList[0]
-			.getByRole('combobox', { name: 'Hot spot' })
-			.inputValue(),
-	).toEqual(weeklyOutcomesFixture[0].hotSpot);
+		for await (const [index, outcome] of outcomes.entries()) {
+			expect(
+				await outcome.getByRole('combobox', { name: 'Hot spot' }).inputValue(),
+			).toEqual(outcomesFixture[index].hotSpot);
 
-	expect(
-		await refreshedWeeklyOutcomesList[0]
-			.getByPlaceholder('Enter your weekly outcome')
-			.inputValue(),
-	).toEqual(weeklyOutcomesFixture[0].weeklyOutcome);
-
-	expect(
-		await refreshedWeeklyOutcomesList[1]
-			.getByRole('combobox', { name: 'Hot spot' })
-			.inputValue(),
-	).toEqual(weeklyOutcomesFixture[1].hotSpot);
-
-	expect(
-		await refreshedWeeklyOutcomesList[2]
-			.getByPlaceholder('Enter your weekly outcome')
-			.inputValue(),
-	).toEqual(weeklyOutcomesFixture[2].weeklyOutcome);
+			expect(
+				await outcome
+					.getByPlaceholder('Enter your weekly outcome')
+					.inputValue(),
+			).toEqual(outcomesFixture[index].outcome);
+		}
+	}
 });
 
 // AS A user
