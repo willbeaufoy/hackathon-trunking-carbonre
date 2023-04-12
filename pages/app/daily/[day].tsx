@@ -99,11 +99,9 @@ function WeeklyOutcomes() {
 		}
 	}, [status, weeklyOutcomes, saveWeeklyOutcome, day]);
 
-	if (status === 'loading') {
-		return <p>Loading...</p>;
-	}
-
-	if (!weeklyOutcomes || weeklyOutcomes.length === 0) {
+	const isLoading = status === 'loading';
+	const hasWeeklyOutcomes = weeklyOutcomes && weeklyOutcomes.length > 0;
+	if (isLoading || !hasWeeklyOutcomes) {
 		return <p>Loading...</p>;
 	}
 
