@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useCallback, useEffect } from 'react';
 import { useAuth, useFirestore, useFirestoreCollectionData } from 'reactfire';
 
-interface WeeklyOutcome {
+interface WeeklyOutcomeData {
 	hotSpot: string;
 	outcome: string;
 	day: string;
@@ -82,7 +82,7 @@ function WeeklyOutcomes() {
 	);
 
 	const saveWeeklyOutcome = useCallback(
-		(id: string) => (outcome: WeeklyOutcome) =>
+		(id: string) => (outcome: WeeklyOutcomeData) =>
 			setDoc(doc(weeklyOutcomesCollection, id), outcome).catch(console.error),
 		[weeklyOutcomesCollection],
 	);
