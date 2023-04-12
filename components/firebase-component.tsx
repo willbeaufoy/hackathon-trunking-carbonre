@@ -1,13 +1,11 @@
 import { firebaseConfig } from '@/firebase.config';
-import { getAuth, connectAuthEmulator, Auth } from 'firebase/auth'; // Firebase v9+
+import { connectAuthEmulator, getAuth } from 'firebase/auth'; // Firebase v9+
 import {
 	connectFirestoreEmulator,
 	enableIndexedDbPersistence,
-	Firestore,
 	initializeFirestore,
 } from 'firebase/firestore';
 import { useEffect } from 'react';
-import { getFirestore } from 'firebase/firestore';
 
 import {
 	AuthProvider,
@@ -43,20 +41,28 @@ export function AuthComponent({ children }) {
 }
 
 export function FirestoreComponent({ children }) {
-	const app = useFirebaseApp();
-	const db = getFirestore(app);
+	const { status, data: firestore } = useInitFirestore(
+		async firebaseApp => {
+			const db = initializeFirestore(firebaseApp, {});
 
-	useEffect(() => {
-		if (USE_EMULATOR) {
 			try {
-				connectFirestoreEmulator(db, 'localhost', 8080);
-			} catch (e: any) {
-				if (e.code !== 'auth/emulator-config-failed') throw e;
+				if (USE_EMULATOR) connectFirestoreEmulator(db, 'localhost', 8080);
+				await enableIndexedDbPersistence(db);
+			} catch (error) {
+				// React.StrictMode will make this error appear, but it's safe to ignore
+				if (error.code !== 'failed-precondition') throw error;
 			}
-		}
-	}, [app, db]);
 
-	return <FirestoreProvider sdk={db}>{children}</FirestoreProvider>;
+			return db;
+		},
+		{ suspense: false },
+	);
+
+	if (status === 'loading') {
+		return <p>Loading...</p>;
+	}
+
+	return <FirestoreProvider sdk={firestore}>{children}</FirestoreProvider>;
 }
 
 export default function FirebaseComponent({ children }) {
