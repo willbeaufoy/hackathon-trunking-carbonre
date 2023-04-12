@@ -6,7 +6,7 @@ import {
 	initializeFirestore,
 } from 'firebase/firestore';
 import { useEffect } from 'react';
-
+import { isBrowser } from '@firebase/util';
 import {
 	AuthProvider,
 	FirebaseAppProvider,
@@ -47,7 +47,7 @@ export function FirestoreComponent({ children }) {
 
 			try {
 				if (USE_EMULATOR) connectFirestoreEmulator(db, 'localhost', 8080);
-				await enableIndexedDbPersistence(db);
+				if (isBrowser()) await enableIndexedDbPersistence(db);
 			} catch (error) {
 				// React.StrictMode will make this error appear, but it's safe to ignore
 				if (error.code !== 'failed-precondition') throw error;
