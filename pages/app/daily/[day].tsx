@@ -65,7 +65,7 @@ const emptyWeeklyOutcome = {
 };
 const idField = 'id';
 
-function Page() {
+function WeeklyOutcomes() {
 	const router = useRouter();
 	const { day } = router.query;
 
@@ -108,6 +108,28 @@ function Page() {
 	}
 
 	return (
+		<section aria-label="Weekly Outcomes">
+			<h2>Weekly Outcomes</h2>
+			<ul className="list-inside list-none space-y-8 pl-0 text-gray-500 dark:text-gray-400">
+				{weeklyOutcomes.map(({ hotSpot, outcome, id }) => (
+					<li key={id}>
+						<WeeklyOutcome
+							hotSpot={hotSpot}
+							outcome={outcome}
+							handleSave={saveWeeklyOutcome(id)}
+						/>
+					</li>
+				))}
+			</ul>
+		</section>
+	);
+}
+
+function Page() {
+	const router = useRouter();
+	const { day } = router.query;
+
+	return (
 		<>
 			<br />
 			<main className="format mx-auto max-w-xs sm:max-w-screen-md">
@@ -115,20 +137,7 @@ function Page() {
 					<h1>{day}</h1>
 					<h2>Sat 8th Apr</h2>
 				</section>
-				<section aria-label="Weekly Outcomes">
-					<h2>Weekly Outcomes</h2>
-					<ul className="list-inside list-none space-y-8 pl-0 text-gray-500 dark:text-gray-400">
-						{weeklyOutcomes.map(({ hotSpot, outcome, id }) => (
-							<li key={id}>
-								<WeeklyOutcome
-									hotSpot={hotSpot}
-									outcome={outcome}
-									handleSave={saveWeeklyOutcome(id)}
-								/>
-							</li>
-						))}
-					</ul>
-				</section>
+				<WeeklyOutcomes />
 				<section>
 					<h2>Daily Outcomes</h2>
 					<ul>
