@@ -8,10 +8,14 @@ import { useAuth, useFirestore, useFirestoreCollectionData } from 'reactfire';
 interface WeeklyOutcome {
 	hotSpot: string;
 	outcome: string;
+	day: string;
 }
 
-interface WeeklyOutcomeProps extends WeeklyOutcome {
-	handleSave: (weeklyOutcome: WeeklyOutcome) => void;
+interface WeeklyOutcomeProps {
+	hotSpot: string;
+	outcome: string;
+
+	handleSave: (weeklyOutcome: { hotSpot: string; outcome: string }) => void;
 }
 
 function WeeklyOutcome({ hotSpot, outcome, handleSave }: WeeklyOutcomeProps) {
@@ -70,7 +74,7 @@ function Page() {
 	const { uid } = auth.currentUser;
 	const weeklyOutcomesCollection = collection(
 		firestore,
-		`users/${uid}/weeks/thisWeek/weeklyOutcomes`,
+		`users/${uid}/weeklyOutcomes/`,
 	);
 	const { status, data: weeklyOutcomes } = useFirestoreCollectionData(
 		weeklyOutcomesCollection,
@@ -87,10 +91,13 @@ function Page() {
 		if (status !== 'success') return;
 		if (!weeklyOutcomes || weeklyOutcomes.length === 0) {
 			[...Array(3)].map((_, i) =>
-				saveWeeklyOutcome(`${i}`)(emptyWeeklyOutcome),
+				saveWeeklyOutcome(`${i}`)({
+					...emptyWeeklyOutcome,
+					day: day as string,
+				}),
 			);
 		}
-	}, [status, weeklyOutcomes, saveWeeklyOutcome]);
+	}, [status, weeklyOutcomes, saveWeeklyOutcome, day]);
 
 	if (status === 'loading') {
 		return <p>Loading...</p>;

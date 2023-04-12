@@ -42,6 +42,8 @@ test('create weekly outcomes and persist them', async ({ page }) => {
 	await page.reload();
 
 	{
+		await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible();
+
 		const outcomes = await page
 			.getByRole('region', { name: 'Weekly Outcomes' })
 			.getByRole('listitem')
