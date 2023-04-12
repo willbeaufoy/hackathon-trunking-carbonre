@@ -1,6 +1,6 @@
 import BumpUnauthorised from '@/components/bump-unauthorised';
 import Layout from '@/components/layout';
-import { collection, doc, setDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect } from 'react';
 import { useAuth, useFirestore, useFirestoreCollectionData } from 'reactfire';
@@ -134,12 +134,22 @@ function WeeklyOutcomes() {
 	);
 }
 
-function DailyOutcome({ hotSpot, outcome, handleSave }: WeeklyOutcomeProps) {
+interface DailyOutcomeProps extends Outcome {
+	handleSave: (outcome: Outcome) => void;
+}
+function DailyOutcome({
+	hotSpot,
+	outcome,
+	type,
+	date,
+	id,
+	handleSave,
+}: DailyOutcomeProps) {
 	const handleOnSubmit = event => {
 		event.preventDefault();
 		const hotSpot = event.target.elements.hotSpot.value;
 		const outcome = event.target.elements.outcome.value;
-		handleSave({ hotSpot, outcome });
+		handleSave({ hotSpot, outcome, date, type, id });
 	};
 
 	return (
@@ -177,6 +187,14 @@ function DailyOutcome({ hotSpot, outcome, handleSave }: WeeklyOutcomeProps) {
 	);
 }
 
+interface Outcome {
+	id: string;
+	hotSpot: string;
+	outcome: string;
+	date: string;
+	type: string;
+}
+
 function DailyOutcomes() {
 	const router = useRouter();
 	const { day } = router.query;
@@ -184,35 +202,39 @@ function DailyOutcomes() {
 	const firestore = useFirestore();
 	const auth = useAuth();
 	const { uid } = auth.currentUser;
-	const dailyOutcomesCollection = collection(
-		firestore,
-		`users/${uid}/dailyOutcomes/`,
-	);
-	const { status, data: dailyOutcomes } = useFirestoreCollectionData(
-		dailyOutcomesCollection,
-		{ idField },
-	);
+	const outcomesCollection = collection(firestore, `users/${uid}/outcomes/`);
+	const { status, data } = useFirestoreCollectionData(outcomesCollection, {
+		idField,
+	});
+	const outcomes = data as Outcome[];
 
 	const saveDailyOutcome = useCallback(
-		(id: string) => (outcome: WeeklyOutcomeData) =>
-			setDoc(doc(dailyOutcomesCollection, id), outcome).catch(console.error),
-		[dailyOutcomesCollection],
+		({ id, hotSpot, outcome, date = day as string, type = 'daily' }: Outcome) =>
+			setDoc(doc(outcomesCollection, id), {
+				hotSpot,
+				outcome,
+				date,
+				type,
+			}).catch(console.error),
+		[day, outcomesCollection],
 	);
 
 	useEffect(() => {
 		if (status !== 'success') return;
-		if (!dailyOutcomes || dailyOutcomes.length === 0) {
+		if (!outcomes || outcomes.length === 0) {
 			[...Array(3)].map((_, i) =>
-				saveDailyOutcome(`${i}`)({
-					...emptyWeeklyOutcome,
-					day: day as string,
+				addDoc(outcomesCollection, {
+					hotSpot: '',
+					outcome: '',
+					date: day as string,
+					type: 'daily',
 				}),
 			);
 		}
-	}, [status, saveDailyOutcome, day, dailyOutcomes]);
+	}, [day, outcomes, outcomesCollection, status]);
 
 	const isLoading = status === 'loading';
-	const hasDailyOutcomes = dailyOutcomes && dailyOutcomes.length > 0;
+	const hasDailyOutcomes = outcomes && outcomes.length > 0;
 	if (isLoading || !hasDailyOutcomes) {
 		return <p>Loading...</p>;
 	}
@@ -221,12 +243,11 @@ function DailyOutcomes() {
 		<section aria-label="Daily Outcomes">
 			<h2>Daily Outcomes</h2>
 			<ul className="list-inside list-none space-y-8 pl-0 text-gray-500 dark:text-gray-400">
-				{dailyOutcomes.map(({ hotSpot, outcome, id }) => (
+				{outcomes.map(({ hotSpot, outcome, date, type, id }) => (
 					<li key={id}>
 						<DailyOutcome
-							hotSpot={hotSpot}
-							outcome={outcome}
-							handleSave={saveDailyOutcome(id)}
+							{...{ hotSpot, outcome, date, type, id }}
+							handleSave={saveDailyOutcome}
 						/>
 					</li>
 				))}
