@@ -1,6 +1,4 @@
 import { expect, test } from '@playwright/test';
-import { set } from 'firebase/database';
-import { setTimeout } from 'timers/promises';
 import { getRandomChars } from './tools';
 import { signupAndLogin } from './user-management';
 
@@ -81,7 +79,6 @@ test('create weekly outcomes and persist them', async ({ page }) => {
 // AS A user
 // I WANT TO be able to create a 3 daily outcomes
 // SO THAT I can plan my day
-
 test('create daily outcomes and persist them', async ({ page }) => {
 	const outcomesFixture = [
 		{ hotSpot: 'Emotions', outcome: 'I am a Emotions daily outcome' },
