@@ -9,7 +9,7 @@
 		"lint": "next lint",
 		"firebase:start": "firebase emulators:start",
 		"firebase:dev": "firebase emulators:exec 'npm run dev'",
-		"firebase:firestore:rules:deploy": "firebase deploy --only firestore:rules",
+		"firebase:firestore:deploy": "firebase deploy --only firestore",
 		"test:playwright": "playwright test",
 		"prepare": "husky install"
 	},
