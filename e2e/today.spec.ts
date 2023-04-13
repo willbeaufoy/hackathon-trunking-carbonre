@@ -170,22 +170,17 @@ test('create retro notes and persist them', async ({ page }) => {
 		const retroNotesSection = page.getByRole('region', { name: 'Retro Notes' });
 		const retroNotes = retroNotesSection.getByRole('listitem');
 
-		await setTimeout(100);
 		expect(await retroNotes.all()).toHaveLength(0);
 
 		for await (const [index, { note }] of retroNotesFixture.entries()) {
 			await retroNotesSection
 				.getByRole('button', { name: 'Add Retro Note' })
 				.click();
-			await setTimeout(100);
 			await retroNotes
 				.nth(index)
 				.getByPlaceholder('Enter your retro note')
 				.fill(note);
-			await retroNotes
-				.nth(index)
-				.getByRole('button', { name: 'Save ' + index })
-				.click();
+			await retroNotes.nth(index).getByRole('button', { name: 'Save' }).click();
 		}
 	}
 

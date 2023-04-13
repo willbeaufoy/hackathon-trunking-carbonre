@@ -4,6 +4,7 @@ import {
 	addDoc,
 	collection,
 	doc,
+	orderBy,
 	query,
 	setDoc,
 	where,
@@ -160,7 +161,7 @@ interface RetroNoteProps extends RetroNote {
 	handleSave: (retronote: RetroNote) => void;
 }
 
-function RetroNote({ retronote, i, handleSave, ...rest }: RetroNoteProps) {
+function RetroNote({ retronote, handleSave, ...rest }: RetroNoteProps) {
 	const handleOnSubmit = event => {
 		event.preventDefault();
 		const retronote = event.target.elements.retronote.value;
@@ -180,7 +181,7 @@ function RetroNote({ retronote, i, handleSave, ...rest }: RetroNoteProps) {
 				type="submit"
 				className="block w-36 rounded-full bg-green-300 bg-center py-3 text-center text-base font-normal text-black shadow-xl hover:bg-green-400 focus:ring-4 focus:ring-green-200 dark:focus:ring-green-900 sm:w-72"
 			>
-				Save {i}
+				Save
 			</button>
 			<br />
 		</form>
@@ -200,7 +201,9 @@ function RetroNotes() {
 		retroCollection,
 		where('type', '==', 'retro'),
 		where('period', '==', 'daily'),
+		orderBy('date', 'asc'),
 	);
+
 	const { status, data } = useFirestoreCollectionData(retroQuery, {
 		idField,
 	});
@@ -210,18 +213,17 @@ function RetroNotes() {
 		(retroNote: RetroNote) =>
 			setDoc(doc(retroCollection, retroNote.id), {
 				...retroNote,
-				date: day as string,
 			}).catch(console.error),
-		[day, retroCollection],
+		[retroCollection],
 	);
 
-	const addRetroNote = () =>
+	const addRetroNote = (i: number) =>
 		addDoc(retroCollection, {
-			date: day as string,
+			date: `${day}-${i}`,
 			type: 'retro',
 			period: 'daily',
 			retronote: '',
-		});
+		} as RetroNote);
 
 	const isLoading = status === 'loading';
 	if (isLoading) {
@@ -238,7 +240,7 @@ function RetroNotes() {
 					</li>
 				))}
 			</ul>
-			<button onClick={addRetroNote} type="button">
+			<button onClick={() => addRetroNote(retroNotes.length + 1)} type="button">
 				Add Retro Note
 			</button>
 		</section>
@@ -257,8 +259,8 @@ function Page() {
 					<h1>{day}</h1>
 					<h2>Sat 8th Apr</h2>
 				</section>
-				<Outcomes type="weekly" />
-				<Outcomes type="daily" />
+				{/* <Outcomes type="weekly" /> */}
+				{/* <Outcomes type="daily" /> */}
 				<RetroNotes />
 			</main>
 		</>
