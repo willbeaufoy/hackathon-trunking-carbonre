@@ -134,17 +134,17 @@ function WeeklyOutcomes() {
 	);
 }
 
-interface DailyOutcomeProps extends Outcome {
+interface OutcomeProps extends Outcome {
 	handleSave: (outcome: Outcome) => void;
 }
-function DailyOutcome({
+function Outcome({
 	hotSpot,
 	outcome,
 	type,
 	date,
 	id,
 	handleSave,
-}: DailyOutcomeProps) {
+}: OutcomeProps) {
 	const handleOnSubmit = event => {
 		event.preventDefault();
 		const hotSpot = event.target.elements.hotSpot.value;
@@ -173,7 +173,7 @@ function DailyOutcome({
 				className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 				rows={3}
 				name="outcome"
-				placeholder="Enter your Daily outcome"
+				placeholder="Enter your outcome"
 				defaultValue={outcome || ''}
 			/>
 			<button
@@ -195,7 +195,7 @@ interface Outcome {
 	type: string;
 }
 
-function DailyOutcomes() {
+function Outcomes({ type }: { type: string }) {
 	const router = useRouter();
 	const { day } = router.query;
 
@@ -208,8 +208,8 @@ function DailyOutcomes() {
 	});
 	const outcomes = data as Outcome[];
 
-	const saveDailyOutcome = useCallback(
-		({ id, hotSpot, outcome, date = day as string, type = 'daily' }: Outcome) =>
+	const saveOutcome = useCallback(
+		({ id, hotSpot, outcome, date = day as string, type }: Outcome) =>
 			setDoc(doc(outcomesCollection, id), {
 				hotSpot,
 				outcome,
@@ -228,26 +228,28 @@ function DailyOutcomes() {
 				hotSpot: '',
 				outcome: '',
 				date: day as string,
-				type: 'daily',
+				type,
 			}),
 		);
-	}, [day, outcomes, outcomesCollection, status]);
+	}, [day, outcomes, outcomesCollection, status, type]);
 
 	const isLoading = status === 'loading';
-	const hasDailyOutcomes = outcomes && outcomes.length > 0;
-	if (isLoading || !hasDailyOutcomes) {
+	const hasOutcomes = outcomes && outcomes.length > 0;
+	if (isLoading || !hasOutcomes) {
 		return <p>Loading...</p>;
 	}
 
+	const capitalisedType = type.charAt(0).toUpperCase() + type.slice(1);
+
 	return (
-		<section aria-label="Daily Outcomes">
-			<h2>Daily Outcomes</h2>
+		<section aria-label={`${capitalisedType} Outcomes`}>
+			<h2>{`${capitalisedType} Outcomes`}</h2>
 			<ul className="list-inside list-none space-y-8 pl-0 text-gray-500 dark:text-gray-400">
 				{outcomes.map(({ hotSpot, outcome, date, type, id }) => (
 					<li key={id}>
-						<DailyOutcome
+						<Outcome
 							{...{ hotSpot, outcome, date, type, id }}
-							handleSave={saveDailyOutcome}
+							handleSave={saveOutcome}
 						/>
 					</li>
 				))}
@@ -269,7 +271,7 @@ function Page() {
 					<h2>Sat 8th Apr</h2>
 				</section>
 				<WeeklyOutcomes />
-				<DailyOutcomes />
+				<Outcomes type="daily" />
 				<section>
 					<h2>Retro</h2>
 					<ul>

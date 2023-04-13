@@ -110,7 +110,7 @@ test('create daily outcomes and persist them', async ({ page }) => {
 				.selectOption(hotSpot);
 			await outcomes
 				.nth(index)
-				.getByPlaceholder('Enter your daily outcome')
+				.getByPlaceholder('Enter your outcome')
 				.fill(outcome);
 			await outcomes.nth(index).getByRole('button', { name: 'Save' }).click();
 		}
@@ -141,7 +141,7 @@ test('create daily outcomes and persist them', async ({ page }) => {
 			expect(
 				await outcomes
 					.nth(index)
-					.getByPlaceholder('Enter your daily outcome')
+					.getByPlaceholder('Enter your outcome')
 					.inputValue(),
 			).toEqual(outcome);
 		}
