@@ -254,7 +254,7 @@ function Page() {
 	return (
 		<>
 			<br />
-			<main className="format mx-auto max-w-xs sm:max-w-screen-md">
+			<main className="format m-auto max-w-xs p-3 sm:max-w-screen-md">
 				<section>
 					<h1>{day}</h1>
 					<h2>Sat 8th Apr</h2>
