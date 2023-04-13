@@ -24,22 +24,24 @@ const HOTSPOTS = [
 
 const idField = 'id';
 
+interface Outcome {
+	id: string;
+	index: number;
+	date: string;
+	type: string;
+	hotSpot: string;
+	outcome: string;
+}
+
 interface OutcomeProps extends Outcome {
 	handleSave: (outcome: Outcome) => void;
 }
-function Outcome({
-	hotSpot,
-	outcome,
-	type,
-	date,
-	id,
-	handleSave,
-}: OutcomeProps) {
+function Outcome({ hotSpot, outcome, handleSave, ...rest }: OutcomeProps) {
 	const handleOnSubmit = event => {
 		event.preventDefault();
 		const hotSpot = event.target.elements.hotSpot.value;
 		const outcome = event.target.elements.outcome.value;
-		handleSave({ hotSpot, outcome, date, type, id });
+		handleSave({ ...rest, hotSpot, outcome });
 	};
 
 	return (
@@ -77,52 +79,47 @@ function Outcome({
 	);
 }
 
-interface Outcome {
-	id: string;
-	hotSpot: string;
-	outcome: string;
-	date: string;
-	type: string;
-}
-
-function Outcomes({ type }: { type: string }) {
+function Outcomes({ period }: { period: string }) {
 	const router = useRouter();
 	const { day } = router.query;
 
 	const firestore = useFirestore();
 	const auth = useAuth();
 	const { uid } = auth.currentUser;
-	const outcomesCollection = collection(firestore, `users/${uid}/outcomes/`);
-	const outcomesQuery = query(outcomesCollection, where('type', '==', type));
+	const outcomesCollection = collection(firestore, `users/${uid}/notes/`);
+	const outcomesQuery = query(
+		outcomesCollection,
+		where('type', '==', 'outcome'),
+		where('period', '==', period),
+		orderBy('date', 'asc'),
+		orderBy('index', 'asc'),
+	);
 	const { status, data } = useFirestoreCollectionData(outcomesQuery, {
 		idField,
 	});
 	const outcomes = data as Outcome[];
 
 	const saveOutcome = useCallback(
-		({ id, hotSpot, outcome, date = day as string, type }: Outcome) =>
-			setDoc(doc(outcomesCollection, id), {
-				hotSpot,
-				outcome,
-				date,
-				type,
-			}).catch(console.error),
-		[day, outcomesCollection],
+		(outcome: Outcome) =>
+			setDoc(doc(outcomesCollection, outcome.id), outcome).catch(console.error),
+		[outcomesCollection],
 	);
 
 	useEffect(() => {
 		const isLoaded = status === 'success';
 		const hasOutcomes = outcomes && outcomes.length > 0;
 		if (!isLoaded || hasOutcomes) return;
-		[...Array(3)].map((_, i) =>
+		[...Array(3)].map((_, index) =>
 			addDoc(outcomesCollection, {
+				date: day as string,
+				index,
+				type: 'outcome',
+				period,
 				hotSpot: '',
 				outcome: '',
-				date: day as string,
-				type,
 			}),
 		);
-	}, [day, outcomes, outcomesCollection, status, type]);
+	}, [day, outcomes, outcomesCollection, period, status]);
 
 	const isLoading = status === 'loading';
 	const hasOutcomes = outcomes && outcomes.length > 0;
@@ -130,18 +127,15 @@ function Outcomes({ type }: { type: string }) {
 		return <p>Loading...</p>;
 	}
 
-	const capitalisedType = type.charAt(0).toUpperCase() + type.slice(1);
+	const capitalisedType = period.charAt(0).toUpperCase() + period.slice(1);
 
 	return (
 		<section aria-label={`${capitalisedType} Outcomes`}>
 			<h2>{`${capitalisedType} Outcomes`}</h2>
 			<ul className="list-inside list-none space-y-8 pl-0 text-gray-500 dark:text-gray-400">
-				{outcomes.map(({ hotSpot, outcome, date, type, id }) => (
-					<li key={id}>
-						<Outcome
-							{...{ hotSpot, outcome, date, type, id }}
-							handleSave={saveOutcome}
-						/>
+				{outcomes.map(outcome => (
+					<li key={outcome.id}>
+						<Outcome {...{ ...outcome }} handleSave={saveOutcome} />
 					</li>
 				))}
 			</ul>
@@ -152,10 +146,10 @@ function Outcomes({ type }: { type: string }) {
 interface RetroNote {
 	id: string;
 	index: number;
-	retronote: string;
 	date: string;
 	type: string;
 	period: string;
+	retronote: string;
 }
 
 interface RetroNoteProps extends RetroNote {
@@ -212,9 +206,9 @@ function RetroNotes({ period = 'daily' }: { period?: string }) {
 
 	const saveRetroNote = useCallback(
 		(retroNote: RetroNote) =>
-			setDoc(doc(retroCollection, retroNote.id), {
-				...retroNote,
-			}).catch(console.error),
+			setDoc(doc(retroCollection, retroNote.id), retroNote).catch(
+				console.error,
+			),
 		[retroCollection],
 	);
 
@@ -236,7 +230,7 @@ function RetroNotes({ period = 'daily' }: { period?: string }) {
 		<section aria-label="Retro Notes">
 			<h2>Retro Notes</h2>
 			<ul>
-				{retroNotes.map((retroNote, i) => (
+				{retroNotes.map(retroNote => (
 					<li key={retroNote.id}>
 						<RetroNote {...{ ...retroNote }} handleSave={saveRetroNote} />
 					</li>
@@ -261,8 +255,8 @@ function Page() {
 					<h1>{day}</h1>
 					<h2>Sat 8th Apr</h2>
 				</section>
-				<Outcomes type="weekly" />
-				<Outcomes type="daily" />
+				<Outcomes period="weekly" />
+				<Outcomes period="daily" />
 				<RetroNotes />
 			</main>
 		</>
