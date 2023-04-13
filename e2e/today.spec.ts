@@ -154,12 +154,6 @@ test('create daily outcomes and persist them', async ({ page }) => {
 // I WANT TO be able to create a few retro notes
 // SO THAT I can save note on my day
 test('create retro notes and persist them', async ({ page }) => {
-	const retroNotesFixture = [
-		{ note: 'I am a retro note 1' },
-		{ note: 'I am a retro note 2' },
-		{ note: 'I am a retro note 3' },
-	];
-
 	const myEmail = `test-${getRandomChars()}@test.com`;
 	const myPassword = 'password';
 
@@ -172,14 +166,14 @@ test('create retro notes and persist them', async ({ page }) => {
 
 		expect(await retroNotes.all()).toHaveLength(0);
 
-		for await (const [index, { note }] of retroNotesFixture.entries()) {
+		for await (const [index] of [...Array(3)].entries()) {
 			await retroNotesSection
 				.getByRole('button', { name: 'Add Retro Note' })
 				.click();
 			await retroNotes
 				.nth(index)
 				.getByPlaceholder('Enter your retro note')
-				.fill(note);
+				.fill(`I am a retro note ${index}`);
 			await retroNotes.nth(index).getByRole('button', { name: 'Save' }).click();
 		}
 	}
@@ -193,13 +187,13 @@ test('create retro notes and persist them', async ({ page }) => {
 			.getByRole('region', { name: 'Retro Notes' })
 			.getByRole('listitem');
 
-		for await (const [index, { note }] of retroNotesFixture.entries()) {
+		for await (const [index] of [...Array(3)].entries()) {
 			expect(
 				await retroNotes
 					.nth(index)
 					.getByRole('textbox', { name: 'Retro Note' })
 					.inputValue(),
-			).toEqual(note);
+			).toEqual(`I am a retro note ${index}`);
 		}
 
 		expect(await retroNotes.all()).toHaveLength(3);

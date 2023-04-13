@@ -151,6 +151,7 @@ function Outcomes({ type }: { type: string }) {
 
 interface RetroNote {
 	id: string;
+	index: number;
 	retronote: string;
 	date: string;
 	type: string;
@@ -202,6 +203,7 @@ function RetroNotes() {
 		where('type', '==', 'retro'),
 		where('period', '==', 'daily'),
 		orderBy('date', 'asc'),
+		orderBy('index', 'asc'),
 	);
 
 	const { status, data } = useFirestoreCollectionData(retroQuery, {
@@ -217,9 +219,10 @@ function RetroNotes() {
 		[retroCollection],
 	);
 
-	const addRetroNote = (i: number) =>
+	const addRetroNote = (index: number) =>
 		addDoc(retroCollection, {
-			date: `${day}-${i}`,
+			date: day as string,
+			index,
 			type: 'retro',
 			period: 'daily',
 			retronote: '',
@@ -236,11 +239,11 @@ function RetroNotes() {
 			<ul>
 				{retroNotes.map((retroNote, i) => (
 					<li key={retroNote.id}>
-						<RetroNote {...{ ...retroNote, i }} handleSave={saveRetroNote} />
+						<RetroNote {...{ ...retroNote }} handleSave={saveRetroNote} />
 					</li>
 				))}
 			</ul>
-			<button onClick={() => addRetroNote(retroNotes.length + 1)} type="button">
+			<button onClick={() => addRetroNote(retroNotes.length)} type="button">
 				Add Retro Note
 			</button>
 		</section>
