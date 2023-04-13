@@ -153,3 +153,60 @@ test('create daily outcomes and persist them', async ({ page }) => {
 // AS A user
 // I WANT TO be able to create a few retro notes
 // SO THAT I can save note on my day
+test('create retro notes and persist them', async ({ page }) => {
+	const retroNotesFixture = [
+		{ note: 'I am a retro note 1' },
+		{ note: 'I am a retro note 2' },
+		{ note: 'I am a retro note 3' },
+	];
+
+	const myEmail = `test-${getRandomChars()}@test.com`;
+	const myPassword = 'password';
+
+	await signupAndLogin(page, myEmail, myPassword);
+	await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible();
+
+	{
+		const retroNotesSection = page.getByRole('region', { name: 'Retro Notes' });
+		const retroNotes = retroNotesSection.getByRole('listitem');
+
+		await setTimeout(100);
+		expect(await retroNotes.all()).toHaveLength(0);
+
+		for await (const [index, { note }] of retroNotesFixture.entries()) {
+			await retroNotesSection
+				.getByRole('button', { name: 'Add Retro Note' })
+				.click();
+			await setTimeout(100);
+			await retroNotes
+				.nth(index)
+				.getByPlaceholder('Enter your retro note')
+				.fill(note);
+			await retroNotes
+				.nth(index)
+				.getByRole('button', { name: 'Save ' + index })
+				.click();
+		}
+	}
+
+	await page.reload();
+
+	{
+		await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible();
+
+		const retroNotes = page
+			.getByRole('region', { name: 'Retro Notes' })
+			.getByRole('listitem');
+
+		for await (const [index, { note }] of retroNotesFixture.entries()) {
+			expect(
+				await retroNotes
+					.nth(index)
+					.getByRole('textbox', { name: 'Retro Note' })
+					.inputValue(),
+			).toEqual(note);
+		}
+
+		expect(await retroNotes.all()).toHaveLength(3);
+	}
+});

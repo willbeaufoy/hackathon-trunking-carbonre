@@ -9,7 +9,7 @@ import {
 	where,
 } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuth, useFirestore, useFirestoreCollectionData } from 'reactfire';
 
 const HOTSPOTS = [
@@ -148,6 +148,103 @@ function Outcomes({ type }: { type: string }) {
 	);
 }
 
+interface RetroNote {
+	id: string;
+	retronote: string;
+	date: string;
+	type: string;
+	period: string;
+}
+
+interface RetroNoteProps extends RetroNote {
+	handleSave: (retronote: RetroNote) => void;
+}
+
+function RetroNote({ retronote, i, handleSave, ...rest }: RetroNoteProps) {
+	const handleOnSubmit = event => {
+		event.preventDefault();
+		const retronote = event.target.elements.retronote.value;
+		handleSave({ ...rest, retronote });
+	};
+
+	return (
+		<form onSubmit={handleOnSubmit} className="space-y-2">
+			<textarea
+				className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+				rows={3}
+				name="retronote"
+				placeholder="Enter your retro note"
+				defaultValue={retronote || ''}
+			/>
+			<button
+				type="submit"
+				className="block w-36 rounded-full bg-green-300 bg-center py-3 text-center text-base font-normal text-black shadow-xl hover:bg-green-400 focus:ring-4 focus:ring-green-200 dark:focus:ring-green-900 sm:w-72"
+			>
+				Save {i}
+			</button>
+			<br />
+		</form>
+	);
+}
+
+function RetroNotes() {
+	const router = useRouter();
+	const { day } = router.query;
+
+	const firestore = useFirestore();
+	const auth = useAuth();
+	const { uid } = auth.currentUser;
+	const retroCollection = collection(firestore, `users/${uid}/notes/`);
+	// add to the query a check for period being daily
+	const retroQuery = query(
+		retroCollection,
+		where('type', '==', 'retro'),
+		where('period', '==', 'daily'),
+	);
+	const { status, data } = useFirestoreCollectionData(retroQuery, {
+		idField,
+	});
+	const retroNotes = data as RetroNote[];
+
+	const saveRetroNote = useCallback(
+		(retroNote: RetroNote) =>
+			setDoc(doc(retroCollection, retroNote.id), {
+				...retroNote,
+				date: day as string,
+			}).catch(console.error),
+		[day, retroCollection],
+	);
+
+	const addRetroNote = () =>
+		addDoc(retroCollection, {
+			date: day as string,
+			type: 'retro',
+			period: 'daily',
+			retronote: '',
+		});
+
+	const isLoading = status === 'loading';
+	if (isLoading) {
+		return <p>Loading...</p>;
+	}
+
+	return (
+		<section aria-label="Retro Notes">
+			<h2>Retro Notes</h2>
+			<ul>
+				{retroNotes.map((retroNote, i) => (
+					<li key={retroNote.id}>
+						<RetroNote {...{ ...retroNote, i }} handleSave={saveRetroNote} />
+					</li>
+				))}
+			</ul>
+			<button onClick={addRetroNote} type="button">
+				Add Retro Note
+			</button>
+		</section>
+	);
+}
+
 function Page() {
 	const router = useRouter();
 	const { day } = router.query;
@@ -162,37 +259,7 @@ function Page() {
 				</section>
 				<Outcomes type="weekly" />
 				<Outcomes type="daily" />
-				<section>
-					<h2>Retro</h2>
-					<ul>
-						<li>
-							<input
-								type="text"
-								id="email"
-								className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-								placeholder="Enter your Retro"
-								defaultValue="Retro 1"
-							/>
-						</li>
-						<li>
-							<input
-								type="text"
-								id="email"
-								className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-								placeholder="Enter your Retro"
-								defaultValue="Retro 2"
-							/>
-						</li>
-						<li>
-							<input
-								type="text"
-								id="email"
-								className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-								placeholder="Enter your Retro"
-							/>
-						</li>
-					</ul>
-				</section>
+				<RetroNotes />
 			</main>
 		</>
 	);
