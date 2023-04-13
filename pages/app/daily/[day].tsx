@@ -229,14 +229,18 @@ function RetroNotes({ period = 'daily' }: { period?: string }) {
 	return (
 		<section aria-label="Retro Notes">
 			<h2>Retro Notes</h2>
-			<ul>
+			<ul className="list-inside list-none space-y-8 pl-0 text-gray-500 dark:text-gray-400">
 				{retroNotes.map(retroNote => (
 					<li key={retroNote.id}>
 						<RetroNote {...{ ...retroNote }} handleSave={saveRetroNote} />
 					</li>
 				))}
 			</ul>
-			<button onClick={() => addRetroNote(retroNotes.length)} type="button">
+			<button
+				onClick={() => addRetroNote(retroNotes.length)}
+				type="button"
+				className="block w-36 rounded-full bg-blue-900 bg-center py-3 text-center text-base font-normal text-white shadow-xl hover:bg-blue-950 focus:ring-4 focus:ring-blue-700 dark:focus:ring-blue-300 sm:w-72"
+			>
 				Add Retro Note
 			</button>
 		</section>
