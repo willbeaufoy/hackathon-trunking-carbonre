@@ -270,37 +270,6 @@ function Page() {
 				</section>
 				<WeeklyOutcomes />
 				<DailyOutcomes />
-				{/* <section>
-					<h2>Daily Outcomes</h2>
-					<ul>
-						<li>
-							<input
-								type="text"
-								id="email"
-								className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-								placeholder="Enter your Daily outcome"
-								defaultValue="Daily outcome 1"
-							/>
-						</li>
-						<li>
-							<input
-								type="text"
-								id="email"
-								className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-								placeholder="Enter your Daily outcome"
-								defaultValue="Daily outcome 2"
-							/>
-						</li>
-						<li>
-							<input
-								type="text"
-								id="email"
-								className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-								placeholder="Enter your Daily outcome"
-							/>
-						</li>
-					</ul>
-				</section> */}
 				<section>
 					<h2>Retro</h2>
 					<ul>
