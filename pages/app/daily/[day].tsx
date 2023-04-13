@@ -189,7 +189,7 @@ function RetroNote({ retronote, handleSave, ...rest }: RetroNoteProps) {
 	);
 }
 
-function RetroNotes() {
+function RetroNotes({ period = 'daily' }: { period?: string }) {
 	const router = useRouter();
 	const { day } = router.query;
 
@@ -197,11 +197,10 @@ function RetroNotes() {
 	const auth = useAuth();
 	const { uid } = auth.currentUser;
 	const retroCollection = collection(firestore, `users/${uid}/notes/`);
-	// add to the query a check for period being daily
 	const retroQuery = query(
 		retroCollection,
 		where('type', '==', 'retro'),
-		where('period', '==', 'daily'),
+		where('period', '==', period),
 		orderBy('date', 'asc'),
 		orderBy('index', 'asc'),
 	);
@@ -224,7 +223,7 @@ function RetroNotes() {
 			date: day as string,
 			index,
 			type: 'retro',
-			period: 'daily',
+			period,
 			retronote: '',
 		} as RetroNote);
 
