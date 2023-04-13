@@ -220,17 +220,17 @@ function DailyOutcomes() {
 	);
 
 	useEffect(() => {
-		if (status !== 'success') return;
-		if (!outcomes || outcomes.length === 0) {
-			[...Array(3)].map((_, i) =>
-				addDoc(outcomesCollection, {
-					hotSpot: '',
-					outcome: '',
-					date: day as string,
-					type: 'daily',
-				}),
-			);
-		}
+		const isLoaded = status === 'success';
+		const hasOutcomes = outcomes && outcomes.length > 0;
+		if (!isLoaded || hasOutcomes) return;
+		[...Array(3)].map((_, i) =>
+			addDoc(outcomesCollection, {
+				hotSpot: '',
+				outcome: '',
+				date: day as string,
+				type: 'daily',
+			}),
+		);
 	}, [day, outcomes, outcomesCollection, status]);
 
 	const isLoading = status === 'loading';
