@@ -259,8 +259,8 @@ function Page() {
 					<h1>{day}</h1>
 					<h2>Sat 8th Apr</h2>
 				</section>
-				{/* <Outcomes type="weekly" /> */}
-				{/* <Outcomes type="daily" /> */}
+				<Outcomes type="weekly" />
+				<Outcomes type="daily" />
 				<RetroNotes />
 			</main>
 		</>
