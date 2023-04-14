@@ -81,6 +81,7 @@ test('create weekly outcomes and persist them', async ({ page }) => {
 			index,
 			{ hotSpot, outcome },
 		] of outcomesFixture.entries()) {
+			await setTimeout(100);
 			expect(
 				await outcomes
 					.nth(index)
