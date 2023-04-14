@@ -294,9 +294,39 @@ test('create daily outcomes and persist them', async ({ page }) => {
 
 	{
 		await expect(
-			page.getByRole('heading', { name: 'Tue, Mar 15' }),
+			page.getByRole('heading', { name: 'Wed, Mar 16' }),
 		).toBeVisible();
 		await setTimeout(50);
+
+		const outcomes = page
+			.getByRole('region', { name: 'Daily Outcomes' })
+			.getByRole('listitem');
+
+		for await (const [index] of outcomesFixture.entries()) {
+			expect(
+				await outcomes
+					.nth(index)
+					.getByRole('combobox', { name: 'Hot spot' })
+					.inputValue(),
+			).toEqual('');
+
+			expect(
+				await outcomes
+					.nth(index)
+					.getByPlaceholder('Enter your outcome')
+					.inputValue(),
+			).toEqual('');
+		}
+	}
+
+	await page.getByRole('link', { name: 'Previous day' }).click();
+	await page.getByRole('link', { name: 'Previous day' }).click();
+
+	{
+		await expect(
+			page.getByRole('heading', { name: 'Mon, Mar 14' }),
+		).toBeVisible();
+		await setTimeout(100);
 
 		const outcomes = page
 			.getByRole('region', { name: 'Daily Outcomes' })
@@ -326,6 +356,22 @@ test('create daily outcomes and persist them', async ({ page }) => {
 test('create retro notes and persist them', async ({ page }) => {
 	const myEmail = `test-${getRandomChars()}@test.com`;
 	const myPassword = 'password';
+	await page.addInitScript(`{
+		// Extend Date constructor to default to fakeNow
+		Date = class extends Date {
+		  constructor(...args) {
+			if (args.length === 0) {
+			  super(${fakeNow});
+			} else {
+			  super(...args);
+			}
+		  }
+		}
+		// Override Date.now() to start from fakeNow
+		const __DateNowOffset = ${fakeNow} - Date.now();
+		const __DateNow = Date.now;
+		Date.now = () => __DateNow() + __DateNowOffset;
+	  }`);
 
 	await signupAndLogin(page, myEmail, myPassword);
 	await expect(
@@ -371,5 +417,28 @@ test('create retro notes and persist them', async ({ page }) => {
 		}
 
 		expect(await retroNotes.all()).toHaveLength(3);
+	}
+
+	await page.getByRole('link', { name: 'Next day' }).click();
+	{
+		const retroNotes = page
+			.getByRole('region', { name: 'Retro Notes' })
+			.getByRole('listitem');
+		await setTimeout(50);
+		expect(
+			await retroNotes.first().getByRole('textbox', { name: 'Retro Note' }),
+		).not.toBeVisible();
+	}
+
+	await page.getByRole('link', { name: 'Previous day' }).click();
+	await page.getByRole('link', { name: 'Previous day' }).click();
+	{
+		const retroNotes = page
+			.getByRole('region', { name: 'Retro Notes' })
+			.getByRole('listitem');
+		await setTimeout(50);
+		expect(
+			await retroNotes.first().getByRole('textbox', { name: 'Retro Note' }),
+		).not.toBeVisible();
 	}
 });

@@ -182,7 +182,7 @@ function RetroNote({ retronote, handleSave, ...rest }: RetroNoteProps) {
 	);
 }
 
-function RetroNotes({ period = 'daily' }: { period?: string }) {
+function RetroNotes({ period, date }: { period: string; date: string }) {
 	const router = useRouter();
 	const { day } = router.query;
 
@@ -194,6 +194,7 @@ function RetroNotes({ period = 'daily' }: { period?: string }) {
 		retroCollection,
 		where('type', '==', 'retro'),
 		where('period', '==', period),
+		where('date', '==', date),
 		orderBy('date', 'asc'),
 		orderBy('index', 'asc'),
 	);
@@ -213,7 +214,7 @@ function RetroNotes({ period = 'daily' }: { period?: string }) {
 
 	const addRetroNote = (index: number) =>
 		addDoc(retroCollection, {
-			date: day as string,
+			date,
 			index,
 			type: 'retro',
 			period,
@@ -289,7 +290,7 @@ function Page() {
 				</section>
 				<Outcomes period="weekly" date={dateYyyyWww} />
 				<Outcomes period="daily" date={dateYyyyMmDd} />
-				<RetroNotes />
+				<RetroNotes period="daily" date={dateYyyyMmDd} />
 			</main>
 		</>
 	);
