@@ -9,8 +9,9 @@ import {
 	setDoc,
 	where,
 } from 'firebase/firestore';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useAuth, useFirestore, useFirestoreCollectionData } from 'reactfire';
 
 const HOTSPOTS = [
@@ -79,10 +80,7 @@ function Outcome({ hotSpot, outcome, handleSave, ...rest }: OutcomeProps) {
 	);
 }
 
-function Outcomes({ period }: { period: string }) {
-	const router = useRouter();
-	const { day } = router.query;
-
+function Outcomes({ period, date }: { period: string; date: string }) {
 	const firestore = useFirestore();
 	const auth = useAuth();
 	const { uid } = auth.currentUser;
@@ -91,6 +89,7 @@ function Outcomes({ period }: { period: string }) {
 		outcomesCollection,
 		where('type', '==', 'outcome'),
 		where('period', '==', period),
+		where('date', '==', date),
 		orderBy('date', 'asc'),
 		orderBy('index', 'asc'),
 	);
@@ -111,7 +110,7 @@ function Outcomes({ period }: { period: string }) {
 		if (!isLoaded || hasOutcomes) return;
 		[...Array(3)].map((_, index) =>
 			addDoc(outcomesCollection, {
-				date: day as string,
+				date,
 				index,
 				type: 'outcome',
 				period,
@@ -119,7 +118,7 @@ function Outcomes({ period }: { period: string }) {
 				outcome: '',
 			}),
 		);
-	}, [day, outcomes, outcomesCollection, period, status]);
+	}, [date, outcomes, outcomesCollection, period, status]);
 
 	const isLoading = status === 'loading';
 	const hasOutcomes = outcomes && outcomes.length > 0;
@@ -250,17 +249,32 @@ function RetroNotes({ period = 'daily' }: { period?: string }) {
 function Page() {
 	const router = useRouter();
 	const { day } = router.query;
+	const date = day === 'today' ? new Date() : new Date(day as string);
+	const dateYyyyMmDd = date.toISOString().split('T')[0];
+
+	const addDay = (number: number) => {
+		const newDate = new Date(date);
+		newDate.setDate(newDate.getDate() + number);
+		return newDate.toISOString().split('T')[0];
+	};
+
+	const dayString = date.toLocaleDateString(navigator.language, {
+		weekday: 'short',
+		day: 'numeric',
+		month: 'short',
+	});
 
 	return (
 		<>
 			<br />
 			<main className="format m-auto max-w-xs p-3 sm:max-w-screen-md">
 				<section>
-					<h1>{day}</h1>
-					<h2>Sat 8th Apr</h2>
+					<h1>{dayString}</h1>
+					<Link href={`/app/daily/${addDay(-1)}`}>Previous day</Link>
+					<Link href={`/app/daily/${addDay(1)}`}>Next day</Link>
 				</section>
-				<Outcomes period="weekly" />
-				<Outcomes period="daily" />
+				<Outcomes period="weekly" date={dateYyyyMmDd} />
+				<Outcomes period="daily" date={dateYyyyMmDd} />
 				<RetroNotes />
 			</main>
 		</>
