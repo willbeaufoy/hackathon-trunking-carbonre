@@ -283,10 +283,18 @@ function Page() {
 			<br />
 			<main className="format m-auto max-w-xs p-3 sm:max-w-screen-md">
 				<section>
-					<h1>{dayString}</h1>
-					<h1>{dateYyyyWww}</h1>
-					<Link href={`/app/daily/${addDay(-1)}`}>Previous day</Link>
-					<Link href={`/app/daily/${addDay(1)}`}>Next day</Link>
+					<div className="mb-8 flex items-center justify-between">
+						<Link href={`/app/daily/${addDay(-1)}`} aria-label="Previous day">
+							Prev
+						</Link>
+						<div className="flex flex-col items-center justify-center">
+							<h2 className="mb-3">{dayString}</h2>
+							<p className="m-0">{dateYyyyWww}</p>
+						</div>
+						<Link href={`/app/daily/${addDay(1)}`} aria-label="Next day">
+							Next
+						</Link>
+					</div>
 				</section>
 				<Outcomes period="weekly" date={dateYyyyWww} />
 				<Outcomes period="daily" date={dateYyyyMmDd} />

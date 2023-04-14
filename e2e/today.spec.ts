@@ -273,6 +273,7 @@ test('create daily outcomes and persist them', async ({ page }) => {
 			index,
 			{ hotSpot, outcome },
 		] of outcomesFixture.entries()) {
+			await setTimeout(50);
 			expect(
 				await outcomes
 					.nth(index)
