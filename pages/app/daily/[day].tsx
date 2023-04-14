@@ -246,11 +246,24 @@ function RetroNotes({ period = 'daily' }: { period?: string }) {
 	);
 }
 
+function getIsoWeek(date: Date): string {
+	const copy = new Date(date.getTime());
+	copy.setUTCDate(copy.getUTCDate() + 4 - (copy.getUTCDay() || 7));
+	const yearStart = new Date(Date.UTC(copy.getUTCFullYear(), 0, 1));
+	const weekNo = Math.ceil(
+		((copy.getTime() - yearStart.getTime()) / 86400000 + 1) / 7,
+	);
+	const year = copy.getUTCFullYear();
+	return `${year}-W${weekNo.toString().padStart(2, '0')}`;
+}
+
 function Page() {
 	const router = useRouter();
 	const { day } = router.query;
 	const date = day === 'today' ? new Date() : new Date(day as string);
 	const dateYyyyMmDd = date.toISOString().split('T')[0];
+	// get the year and week number
+	const dateYyyyWww = getIsoWeek(date);
 
 	const addDay = (number: number) => {
 		const newDate = new Date(date);
@@ -270,10 +283,11 @@ function Page() {
 			<main className="format m-auto max-w-xs p-3 sm:max-w-screen-md">
 				<section>
 					<h1>{dayString}</h1>
+					<h1>{dateYyyyWww}</h1>
 					<Link href={`/app/daily/${addDay(-1)}`}>Previous day</Link>
 					<Link href={`/app/daily/${addDay(1)}`}>Next day</Link>
 				</section>
-				<Outcomes period="weekly" date={dateYyyyMmDd} />
+				<Outcomes period="weekly" date={dateYyyyWww} />
 				<Outcomes period="daily" date={dateYyyyMmDd} />
 				<RetroNotes />
 			</main>

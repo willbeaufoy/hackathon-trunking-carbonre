@@ -3,7 +3,7 @@ import { setTimeout } from 'timers/promises';
 import { getRandomChars } from './tools';
 import { signupAndLogin } from './user-management';
 
-const fakeNow = new Date('March 14 2022 13:37:11').valueOf();
+const fakeNow = new Date('March 15 2022 13:37:11').valueOf();
 
 // AS A user
 // I WANT TO be able to create a 3 weekly outcomes
@@ -40,7 +40,7 @@ test('create weekly outcomes and persist them', async ({ page }) => {
 
 	await signupAndLogin(page, myEmail, myPassword);
 	await expect(
-		page.getByRole('heading', { name: 'Mon, Mar 14' }),
+		page.getByRole('heading', { name: 'Tue, Mar 15' }),
 	).toBeVisible();
 
 	{
@@ -70,7 +70,7 @@ test('create weekly outcomes and persist them', async ({ page }) => {
 
 	{
 		await expect(
-			page.getByRole('heading', { name: 'Mon, Mar 14' }),
+			page.getByRole('heading', { name: 'Tue, Mar 15' }),
 		).toBeVisible();
 
 		const outcomes = page
@@ -97,6 +97,105 @@ test('create weekly outcomes and persist them', async ({ page }) => {
 		}
 
 		expect(await outcomes.all()).toHaveLength(3);
+	}
+
+	await page.getByRole('link', { name: 'Next day' }).click();
+
+	{
+		await expect(
+			page.getByRole('heading', { name: 'Wed, Mar 16' }),
+		).toBeVisible();
+		await setTimeout(50);
+
+		const outcomes = page
+			.getByRole('region', { name: 'Weekly Outcomes' })
+			.getByRole('listitem');
+
+		for await (const [
+			index,
+			{ hotSpot, outcome },
+		] of outcomesFixture.entries()) {
+			expect(
+				await outcomes
+					.nth(index)
+					.getByRole('combobox', { name: 'Hot spot' })
+					.inputValue(),
+			).toEqual(hotSpot);
+
+			expect(
+				await outcomes
+					.nth(index)
+					.getByPlaceholder('Enter your outcome')
+					.inputValue(),
+			).toEqual(outcome);
+		}
+
+		expect(await outcomes.all()).toHaveLength(3);
+	}
+
+	await page.getByRole('link', { name: 'Previous day' }).click();
+	await page.getByRole('link', { name: 'Previous day' }).click();
+
+	{
+		await expect(
+			page.getByRole('heading', { name: 'Mon, Mar 14' }),
+		).toBeVisible();
+		await setTimeout(50);
+
+		const outcomes = page
+			.getByRole('region', { name: 'Weekly Outcomes' })
+			.getByRole('listitem');
+
+		for await (const [
+			index,
+			{ hotSpot, outcome },
+		] of outcomesFixture.entries()) {
+			expect(
+				await outcomes
+					.nth(index)
+					.getByRole('combobox', { name: 'Hot spot' })
+					.inputValue(),
+			).toEqual(hotSpot);
+
+			expect(
+				await outcomes
+					.nth(index)
+					.getByPlaceholder('Enter your outcome')
+					.inputValue(),
+			).toEqual(outcome);
+		}
+
+		expect(await outcomes.all()).toHaveLength(3);
+	}
+
+	// go back one day
+	await page.getByRole('link', { name: 'Previous day' }).click();
+
+	{
+		await expect(
+			page.getByRole('heading', { name: 'Sun, Mar 13' }),
+		).toBeVisible();
+		await setTimeout(50);
+
+		const outcomes = page
+			.getByRole('region', { name: 'Daily Outcomes' })
+			.getByRole('listitem');
+
+		for await (const [index] of outcomesFixture.entries()) {
+			expect(
+				await outcomes
+					.nth(index)
+					.getByRole('combobox', { name: 'Hot spot' })
+					.inputValue(),
+			).toEqual('');
+
+			expect(
+				await outcomes
+					.nth(index)
+					.getByPlaceholder('Enter your outcome')
+					.inputValue(),
+			).toEqual('');
+		}
 	}
 });
 
@@ -132,7 +231,7 @@ test('create daily outcomes and persist them', async ({ page }) => {
 
 	await signupAndLogin(page, myEmail, myPassword);
 	await expect(
-		page.getByRole('heading', { name: 'Mon, Mar 14' }),
+		page.getByRole('heading', { name: 'Tue, Mar 15' }),
 	).toBeVisible();
 
 	{
@@ -162,7 +261,7 @@ test('create daily outcomes and persist them', async ({ page }) => {
 
 	{
 		await expect(
-			page.getByRole('heading', { name: 'Mon, Mar 14' }),
+			page.getByRole('heading', { name: 'Tue, Mar 15' }),
 		).toBeVisible();
 
 		const outcomes = page
@@ -230,7 +329,7 @@ test('create retro notes and persist them', async ({ page }) => {
 
 	await signupAndLogin(page, myEmail, myPassword);
 	await expect(
-		page.getByRole('heading', { name: 'Mon, Mar 14' }),
+		page.getByRole('heading', { name: 'Tue, Mar 15' }),
 	).toBeVisible();
 
 	{
@@ -255,7 +354,7 @@ test('create retro notes and persist them', async ({ page }) => {
 
 	{
 		await expect(
-			page.getByRole('heading', { name: 'Mon, Mar 14' }),
+			page.getByRole('heading', { name: 'Tue, Mar 15' }),
 		).toBeVisible();
 
 		const retroNotes = page
