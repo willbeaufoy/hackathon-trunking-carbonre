@@ -4,7 +4,7 @@ import { Outcomes } from '@/components/notes/Outcomes';
 import { RetroNotes } from '@/components/notes/RetroNotes';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { dateToDayMonthDate, dateToYyyyWw } from '@/lib/date';
+import { dateToDayMonthDate, dateToYyyyMmDd, dateToYyyyWw } from '@/lib/date';
 import { addDays, addWeeks, parseISO } from 'date-fns';
 
 function Page() {
@@ -18,6 +18,7 @@ function Page() {
 	const endOfWeekDisplay = dateToDayMonthDate(endOfWeek);
 	const nextWeekString = dateToYyyyWw(addWeeks(startOfWeek, 1));
 	const prevWeekString = dateToYyyyWw(addWeeks(startOfWeek, -1));
+	const monthString = dateToYyyyMmDd(startOfWeek).slice(0, 7);
 
 	return (
 		<>
@@ -42,8 +43,8 @@ function Page() {
 						</Link>
 					</div>
 				</section>
-				{/* <Outcomes period="daily" date={dateYyyyMmDd} /> */}
 				<Outcomes period="weekly" date={weekString} />
+				<Outcomes period="monthly" date={monthString} />
 				<RetroNotes period="weekly" date={weekString} />
 			</main>
 		</>

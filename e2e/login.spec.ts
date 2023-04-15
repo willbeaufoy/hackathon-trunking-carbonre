@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { getRandomChars } from './tools';
-import { login, signup, validateEmail } from './user-management';
+import { getRandomChars } from './helpers/tools';
+import { login, signup, validateEmail } from './helpers/user-management';
 
 // AS A new user
 // I WANT TO sign up

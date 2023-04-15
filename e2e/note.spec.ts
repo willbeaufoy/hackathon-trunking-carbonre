@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
-import { getRandomChars } from './tools';
-import { signupAndLogin } from './user-management';
+import { getRandomChars } from './helpers/tools';
+import { signupAndLogin } from './helpers/user-management';
 
-test.skip('user can CRUD notes', async ({ page }) => {
+test('user can CRUD notes', async ({ page }) => {
 	const myEmail = `test-${getRandomChars()}@test.com`;
 	const myPassword = 'password';
 

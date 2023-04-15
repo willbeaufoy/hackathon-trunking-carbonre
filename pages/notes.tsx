@@ -1,6 +1,14 @@
 import BumpUnauthorised from '@/components/login/bump-unauthorised';
 import Layout from '@/components/layout';
-import { addDoc, collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
+import {
+	addDoc,
+	collection,
+	deleteDoc,
+	doc,
+	query,
+	setDoc,
+	where,
+} from 'firebase/firestore';
 import { useAuth, useFirestore, useFirestoreCollectionData } from 'reactfire';
 
 interface NoteProps {
@@ -20,14 +28,21 @@ const Note = ({ id, note, title, draft }: NoteProps) => {
 	const notesCollection = collection(firestore, `users/${uid}/notes`);
 
 	const handleModify = () => {
-		setDoc(doc(notesCollection, id), { title, note, draft: { title, note } });
+		setDoc(doc(notesCollection, id), {
+			type: 'note',
+			title,
+			note,
+			draft: { type: 'note', title, note },
+		});
 	};
 
 	const handleSave = event => {
 		event.preventDefault();
 		const title = event.target.title.value;
 		const note = event.target.note.value;
-		setDoc(doc(notesCollection, id), { title, note }).catch(console.error);
+		setDoc(doc(notesCollection, id), { type: 'note', title, note }).catch(
+			console.error,
+		);
 	};
 
 	const handleDelete = event => {
@@ -84,7 +99,8 @@ function MyNotes() {
 	const auth = useAuth();
 	const { uid } = auth.currentUser;
 	const notesCollection = collection(firestore, `users/${uid}/notes`);
-	const { status, data: notes } = useFirestoreCollectionData(notesCollection, {
+	const notesQuery = query(notesCollection, where('type', '==', 'note'));
+	const { status, data: notes } = useFirestoreCollectionData(notesQuery, {
 		idField: 'id',
 	});
 
@@ -94,6 +110,7 @@ function MyNotes() {
 
 	const handleCreate = () => {
 		addDoc(notesCollection, {
+			type: 'note',
 			title: '',
 			note: '',
 			draft: { title: '', note: '' },
