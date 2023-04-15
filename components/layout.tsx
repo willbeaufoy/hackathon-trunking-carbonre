@@ -10,23 +10,26 @@ export default function Layout({ children }) {
 				<ul>
 					{user?.emailVerified ? (
 						<>
-							<li>Hello {user?.email}</li>
-							<li>
+							<li className="mb-2">Hello {user?.email}</li>
+							<li className="mb-2">
 								<Link href="/notes">Notes</Link>
 							</li>
-							<li>
-								<Link href="/app/weekly/thisWeek">Weekly</Link>
+							<li className="mb-2">
+								<Link href="/app/daily/today">Today</Link>
 							</li>
-							<li>
+							<li className="mb-2">
+								<Link href="/app/weekly/thisWeek">This week</Link>
+							</li>
+							<li className="mb-2">
 								<Link href="/sign-out">Sign out</Link>
 							</li>
 						</>
 					) : (
 						<>
-							<li>
+							<li className="mb-2">
 								<Link href="/sign-in">Sign in</Link>
 							</li>
-							<li>
+							<li className="mb-2">
 								<Link href="/sign-up">Sign uppppp</Link>
 							</li>
 						</>
