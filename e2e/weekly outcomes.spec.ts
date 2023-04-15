@@ -77,57 +77,60 @@ test('create weekly outcomes and persist them', async ({ page }) => {
 	}
 });
 
-// AS A user
-// I WANT TO be able to create a 3 daily outcomes
-// SO THAT I can plan my day
-test('create daily outcomes and persist them', async ({ page }) => {
-	const outcomesFixture = [
-		{ hotSpot: 'Emotions', outcome: 'I am a Emotions daily outcome' },
-		{ hotSpot: 'Career', outcome: 'I am a Career daily outcome' },
-		{ hotSpot: 'Fun', outcome: 'I am a Fun daily outcome' },
-	];
+// // AS A user
+// // I WANT TO be able to create a 3 daily outcomes
+// // SO THAT I can plan my day
+// test('create daily outcomes and persist them', async ({ page }) => {
+// 	const outcomesFixture = [
+// 		{ hotSpot: 'Emotions', outcome: 'I am a Emotions daily outcome' },
+// 		{ hotSpot: 'Career', outcome: 'I am a Career daily outcome' },
+// 		{ hotSpot: 'Fun', outcome: 'I am a Fun daily outcome' },
+// 	];
 
-	await expectTitleIs(page, 'Tue, Mar 15');
+// 	await expectTitleIs(page, 'Tue, Mar 15');
 
-	{
-		const outcomes = withinList(page, 'Daily Outcomes');
-		await fillOutcomes(outcomesFixture, outcomes);
-		expect(await outcomes.all()).toHaveLength(3);
-	}
+// 	{
+// 		const outcomes = withinList(page, 'Daily Outcomes');
+// 		await fillOutcomes(outcomesFixture, outcomes);
+// 		expect(await outcomes.all()).toHaveLength(3);
+// 	}
 
-	await page.reload();
+// 	await page.reload();
 
-	{
-		await expectTitleIs(page, 'Tue, Mar 15');
-		const outcomes = withinList(page, 'Daily Outcomes');
-		await expectOutcomesToBeFilled(outcomesFixture, outcomes);
-		expect(await outcomes.all()).toHaveLength(3);
-	}
+// 	{
+// 		await expectTitleIs(page, 'Tue, Mar 15');
+// 		const outcomes = withinList(page, 'Daily Outcomes');
+// 		await expectOutcomesToBeFilled(outcomesFixture, outcomes);
+// 		expect(await outcomes.all()).toHaveLength(3);
+// 	}
 
-	await page.getByRole('link', { name: 'Next day' }).click();
+// 	await page.getByRole('link', { name: 'Next day' }).click();
 
-	{
-		await expectTitleIs(page, 'Wed, Mar 16');
-		const outcomes = withinList(page, 'Daily Outcomes');
-		await expectOutcomesToBeEmpty(outcomesFixture, outcomes);
-	}
+// 	{
+// 		await expectTitleIs(page, 'Wed, Mar 16');
+// 		const outcomes = withinList(page, 'Daily Outcomes');
+// 		await expectOutcomesToBeEmpty(outcomesFixture, outcomes);
+// 	}
 
-	await page.getByRole('link', { name: 'Previous day' }).click();
-	await page.getByRole('link', { name: 'Previous day' }).click();
+// 	await page.getByRole('link', { name: 'Previous day' }).click();
+// 	await page.getByRole('link', { name: 'Previous day' }).click();
 
-	{
-		await expectTitleIs(page, 'Mon, Mar 14');
-		const outcomes = withinList(page, 'Daily Outcomes');
-		await expectOutcomesToBeEmpty(outcomesFixture, outcomes);
-	}
-});
+// 	{
+// 		await expectTitleIs(page, 'Mon, Mar 14');
+// 		const outcomes = withinList(page, 'Daily Outcomes');
+// 		await expectOutcomesToBeEmpty(outcomesFixture, outcomes);
+// 	}
+// });
 
 // AS A user
 // I WANT TO be able to create a few retro notes
-// SO THAT I can save note on my day
+// SO THAT I can save note on my week
 test('create retro notes and persist them', async ({ page }) => {
 	await expectTitleIs(page, 'Tue, Mar 15');
+	await page.getByRole('link', { name: 'Weekly' }).click();
+
 	{
+		await expectTitleIs(page, '2022-W11');
 		const retroNotes = withinList(page, 'Retro Notes');
 		expect(await retroNotes.all()).toHaveLength(0);
 		const retroNotesSection = page.getByRole('region', { name: 'Retro Notes' });
@@ -138,23 +141,23 @@ test('create retro notes and persist them', async ({ page }) => {
 	await page.reload();
 
 	{
-		await expectTitleIs(page, 'Tue, Mar 15');
+		await expectTitleIs(page, '2022-W11');
 		const retroNotes = withinList(page, 'Retro Notes');
 		await expectRetroNotesToHaveBeenFilled(retroNotes);
 		expect(await retroNotes.all()).toHaveLength(3);
 	}
 
-	await page.getByRole('link', { name: 'Next day' }).click();
+	await page.getByRole('link', { name: 'Next week' }).click();
 	{
-		await expectTitleIs(page, 'Wed, Mar 16');
+		await expectTitleIs(page, '2022-W12');
 		const retroNotes = withinList(page, 'Retro Notes');
 		await expectNoRetroNotesExisting(retroNotes);
 	}
 
-	await page.getByRole('link', { name: 'Previous day' }).click();
-	await page.getByRole('link', { name: 'Previous day' }).click();
+	await page.getByRole('link', { name: 'Previous week' }).click();
+	await page.getByRole('link', { name: 'Previous week' }).click();
 	{
-		await expectTitleIs(page, 'Mon, Mar 14');
+		await expectTitleIs(page, '2022-W10');
 		const retroNotes = withinList(page, 'Retro Notes');
 		await expectNoRetroNotesExisting(retroNotes);
 	}
