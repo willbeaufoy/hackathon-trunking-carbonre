@@ -1,5 +1,4 @@
 import {
-	addDoc,
 	collection,
 	doc,
 	orderBy,
@@ -7,7 +6,7 @@ import {
 	setDoc,
 	where,
 } from 'firebase/firestore';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAuth, useFirestore, useFirestoreCollectionData } from 'reactfire';
 
 const HOTSPOTS = [
@@ -21,17 +20,18 @@ const HOTSPOTS = [
 
 const idField = 'id';
 
-interface Outcome {
+interface OutcomeModel {
 	id: string;
 	index: number;
 	date: string;
+	period: string;
 	type: string;
 	hotSpot: string;
 	outcome: string;
 }
 
-interface OutcomeProps extends Outcome {
-	handleSave: (outcome: Outcome) => void;
+interface OutcomeProps extends OutcomeModel {
+	handleSave: (outcome: OutcomeModel) => void;
 }
 
 function Outcome({ hotSpot, outcome, handleSave, ...rest }: OutcomeProps) {
@@ -77,14 +77,22 @@ function Outcome({ hotSpot, outcome, handleSave, ...rest }: OutcomeProps) {
 	);
 }
 
-export function Outcomes({ period, date }: { period: string; date: string }) {
+const useNotesCollection = ({
+	type,
+	period,
+	date,
+}: {
+	type: string;
+	period: string;
+	date: string;
+}) => {
 	const firestore = useFirestore();
 	const auth = useAuth();
 	const { uid } = auth.currentUser;
 	const outcomesCollection = collection(firestore, `users/${uid}/notes/`);
 	const outcomesQuery = query(
 		outcomesCollection,
-		where('type', '==', 'outcome'),
+		where('type', '==', type),
 		where('period', '==', period),
 		where('date', '==', date),
 		orderBy('index', 'asc'),
@@ -92,20 +100,32 @@ export function Outcomes({ period, date }: { period: string; date: string }) {
 	const { status, data } = useFirestoreCollectionData(outcomesQuery, {
 		idField,
 	});
-	const outcomes = data as Outcome[];
+	const outcomes = data as OutcomeModel[];
 
-	const saveOutcome = useCallback(
-		(outcome: Outcome) =>
-			setDoc(doc(outcomesCollection, outcome.id), outcome).catch(console.error),
-		[outcomesCollection],
-	);
+	const getOutcomeId = ({ date, index }: OutcomeModel) => `${date}-${index}`;
+	const saveOutcome = (outcome: OutcomeModel) =>
+		setDoc(doc(outcomesCollection, getOutcomeId(outcome)), outcome).catch(
+			console.error,
+		);
+
+	return { outcomes, status, saveOutcome };
+};
+
+export function Outcomes({ period, date }: { period: string; date: string }) {
+	const type = 'outcome';
+	const { outcomes, status, saveOutcome } = useNotesCollection({
+		type,
+		period,
+		date,
+	});
 
 	useEffect(() => {
 		const isLoaded = status === 'success';
 		const hasOutcomes = outcomes && outcomes.length > 0;
 		if (!isLoaded || hasOutcomes) return;
 		[...Array(3)].map((_, index) =>
-			addDoc(outcomesCollection, {
+			saveOutcome({
+				id: `${date}-${index}`,
 				date,
 				index,
 				type: 'outcome',
@@ -114,7 +134,7 @@ export function Outcomes({ period, date }: { period: string; date: string }) {
 				outcome: '',
 			}),
 		);
-	}, [date, outcomes, outcomesCollection, period, status]);
+	}, [date, outcomes, period, saveOutcome, status]);
 
 	const isLoading = status === 'loading';
 	const hasOutcomes = outcomes && outcomes.length > 0;
