@@ -15,6 +15,9 @@ export default function Layout({ children }) {
 								<Link href="/notes">Notes</Link>
 							</li>
 							<li>
+								<Link href="/app/weekly/thisWeek">Weekly</Link>
+							</li>
+							<li>
 								<Link href="/sign-out">Sign out</Link>
 							</li>
 						</>
