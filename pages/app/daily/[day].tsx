@@ -90,7 +90,6 @@ function Outcomes({ period, date }: { period: string; date: string }) {
 		where('type', '==', 'outcome'),
 		where('period', '==', period),
 		where('date', '==', date),
-		orderBy('date', 'asc'),
 		orderBy('index', 'asc'),
 	);
 	const { status, data } = useFirestoreCollectionData(outcomesQuery, {
@@ -195,7 +194,6 @@ function RetroNotes({ period, date }: { period: string; date: string }) {
 		where('type', '==', 'retro'),
 		where('period', '==', period),
 		where('date', '==', date),
-		orderBy('date', 'asc'),
 		orderBy('index', 'asc'),
 	);
 
