@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useSigninCheck } from 'reactfire';
-import { Loading } from './loading';
+import { Loading } from '../loading';
 import RedirectTo from './redirect-to';
 
 export default function CheckNotSignedIn({ children }) {

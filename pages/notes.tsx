@@ -1,4 +1,4 @@
-import BumpUnauthorised from '@/components/bump-unauthorised';
+import BumpUnauthorised from '@/components/login/bump-unauthorised';
 import Layout from '@/components/layout';
 import { addDoc, collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { useAuth, useFirestore, useFirestoreCollectionData } from 'reactfire';

@@ -1,13 +1,5 @@
-import {
-	collection,
-	doc,
-	orderBy,
-	query,
-	setDoc,
-	where,
-} from 'firebase/firestore';
 import { useEffect } from 'react';
-import { useAuth, useFirestore, useFirestoreCollectionData } from 'reactfire';
+import { NoteModel, useNotesCollection } from './NoteModel';
 
 const HOTSPOTS = [
 	'Mind',
@@ -18,28 +10,23 @@ const HOTSPOTS = [
 	'Fun',
 ] as const;
 
-const idField = 'id';
-
-interface OutcomeModel {
-	id: string;
-	index: number;
-	date: string;
+interface OutcomeModel extends NoteModel {
 	period: string;
-	type: string;
+	type: 'outcome';
 	hotSpot: string;
-	outcome: string;
+	note: string;
 }
 
 interface OutcomeProps extends OutcomeModel {
 	handleSave: (outcome: OutcomeModel) => void;
 }
 
-function Outcome({ hotSpot, outcome, handleSave, ...rest }: OutcomeProps) {
+function Outcome({ hotSpot, note, handleSave, ...rest }: OutcomeProps) {
 	const handleOnSubmit = event => {
 		event.preventDefault();
 		const hotSpot = event.target.elements.hotSpot.value;
-		const outcome = event.target.elements.outcome.value;
-		handleSave({ ...rest, hotSpot, outcome });
+		const note = event.target.elements.note.value;
+		handleSave({ ...rest, hotSpot, note });
 	};
 
 	return (
@@ -62,9 +49,9 @@ function Outcome({ hotSpot, outcome, handleSave, ...rest }: OutcomeProps) {
 			<textarea
 				className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 				rows={3}
-				name="outcome"
+				name="note"
 				placeholder="Enter your outcome"
-				defaultValue={outcome || ''}
+				defaultValue={note || ''}
 			/>
 			<button
 				type="submit"
@@ -77,64 +64,31 @@ function Outcome({ hotSpot, outcome, handleSave, ...rest }: OutcomeProps) {
 	);
 }
 
-const useNotesCollection = ({
-	type,
-	period,
-	date,
-}: {
-	type: string;
-	period: string;
-	date: string;
-}) => {
-	const firestore = useFirestore();
-	const auth = useAuth();
-	const { uid } = auth.currentUser;
-	const outcomesCollection = collection(firestore, `users/${uid}/notes/`);
-	const outcomesQuery = query(
-		outcomesCollection,
-		where('type', '==', type),
-		where('period', '==', period),
-		where('date', '==', date),
-		orderBy('index', 'asc'),
-	);
-	const { status, data } = useFirestoreCollectionData(outcomesQuery, {
-		idField,
-	});
-	const outcomes = data as OutcomeModel[];
-
-	const getOutcomeId = ({ date, index }: OutcomeModel) => `${date}-${index}`;
-	const saveOutcome = (outcome: OutcomeModel) =>
-		setDoc(doc(outcomesCollection, getOutcomeId(outcome)), outcome).catch(
-			console.error,
-		);
-
-	return { outcomes, status, saveOutcome };
-};
-
 export function Outcomes({ period, date }: { period: string; date: string }) {
 	const type = 'outcome';
-	const { outcomes, status, saveOutcome } = useNotesCollection({
+	const { data, status, saveNote } = useNotesCollection({
 		type,
 		period,
 		date,
 	});
+	const outcomes = data as OutcomeModel[];
 
 	useEffect(() => {
 		const isLoaded = status === 'success';
 		const hasOutcomes = outcomes && outcomes.length > 0;
 		if (!isLoaded || hasOutcomes) return;
 		[...Array(3)].map((_, index) =>
-			saveOutcome({
-				id: `${date}-${index}`,
+			saveNote({
+				id: `${date}-${index}-${type}`,
 				date,
 				index,
-				type: 'outcome',
+				type,
 				period,
 				hotSpot: '',
-				outcome: '',
+				note: '',
 			}),
 		);
-	}, [date, outcomes, period, saveOutcome, status]);
+	}, [date, outcomes, period, saveNote, status]);
 
 	const isLoading = status === 'loading';
 	const hasOutcomes = outcomes && outcomes.length > 0;
@@ -150,7 +104,7 @@ export function Outcomes({ period, date }: { period: string; date: string }) {
 			<ul className="list-inside list-none space-y-8 pl-0 text-gray-500 dark:text-gray-400">
 				{outcomes.map(outcome => (
 					<li key={outcome.id}>
-						<Outcome {...{ ...outcome }} handleSave={saveOutcome} />
+						<Outcome {...{ ...outcome }} handleSave={saveNote} />
 					</li>
 				))}
 			</ul>

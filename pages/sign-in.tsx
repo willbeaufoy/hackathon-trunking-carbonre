@@ -1,4 +1,4 @@
-import CheckNotSignedIn from '@/components/check-not-signed-in';
+import CheckNotSignedIn from '@/components/login/check-not-signed-in';
 import {
 	GoogleAuthProvider,
 	signInWithEmailAndPassword,

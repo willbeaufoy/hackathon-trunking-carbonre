@@ -1,4 +1,4 @@
-import BumpUnauthorised from '@/components/bump-unauthorised';
+import BumpUnauthorised from '@/components/login/bump-unauthorised';
 import { useEffect } from 'react';
 import { useAuth } from 'reactfire';
 

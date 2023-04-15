@@ -236,6 +236,7 @@ const fillRetroNotes = async (
 		await retroNotesSection
 			.getByRole('button', { name: 'Add Retro Note' })
 			.click();
+		await setTimeout(slowDownMs);
 		await retroNotes
 			.nth(index)
 			.getByPlaceholder('Enter your retro note')

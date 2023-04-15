@@ -1,9 +1,9 @@
-import BumpUnauthorised from '@/components/bump-unauthorised';
+import BumpUnauthorised from '@/components/login/bump-unauthorised';
 import Layout from '@/components/layout';
+import { Outcomes } from '@/components/notes/Outcomes';
+import { RetroNotes } from '@/components/notes/RetroNotes';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Outcomes } from './Outcomes';
-import { RetroNotes } from './RetroNotes';
 
 function getIsoWeek(date: Date): string {
 	const copy = new Date(date.getTime());

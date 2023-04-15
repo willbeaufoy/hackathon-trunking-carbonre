@@ -1,35 +1,20 @@
-import {
-	addDoc,
-	collection,
-	doc,
-	orderBy,
-	query,
-	setDoc,
-	where,
-} from 'firebase/firestore';
-import { useCallback } from 'react';
-import { useAuth, useFirestore, useFirestoreCollectionData } from 'reactfire';
+import { NoteModel, useNotesCollection } from './NoteModel';
 
-const idField = 'id';
-
-interface RetroNote {
-	id: string;
-	index: number;
-	date: string;
-	type: string;
+interface RetroNoteModel extends NoteModel {
+	type: 'retro';
 	period: string;
-	retronote: string;
+	note: string;
 }
 
-interface RetroNoteProps extends RetroNote {
-	handleSave: (retronote: RetroNote) => void;
+interface RetroNoteProps extends RetroNoteModel {
+	handleSave: (retronote: RetroNoteModel) => void;
 }
 
-function RetroNote({ retronote, handleSave, ...rest }: RetroNoteProps) {
+function RetroNote({ note, handleSave, ...rest }: RetroNoteProps) {
 	const handleOnSubmit = event => {
 		event.preventDefault();
-		const retronote = event.target.elements.retronote.value;
-		handleSave({ ...rest, retronote });
+		const note = event.target.elements.note.value;
+		handleSave({ ...rest, note });
 	};
 
 	return (
@@ -37,9 +22,9 @@ function RetroNote({ retronote, handleSave, ...rest }: RetroNoteProps) {
 			<textarea
 				className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 				rows={3}
-				name="retronote"
+				name="note"
 				placeholder="Enter your retro note"
-				defaultValue={retronote || ''}
+				defaultValue={note || ''}
 			/>
 			<button
 				type="submit"
@@ -53,39 +38,23 @@ function RetroNote({ retronote, handleSave, ...rest }: RetroNoteProps) {
 }
 
 export function RetroNotes({ period, date }: { period: string; date: string }) {
-	const firestore = useFirestore();
-	const auth = useAuth();
-	const { uid } = auth.currentUser;
-	const retroCollection = collection(firestore, `users/${uid}/notes/`);
-	const retroQuery = query(
-		retroCollection,
-		where('type', '==', 'retro'),
-		where('period', '==', period),
-		where('date', '==', date),
-		orderBy('index', 'asc'),
-	);
-
-	const { status, data } = useFirestoreCollectionData(retroQuery, {
-		idField,
+	const type = 'retro';
+	const { data, status, saveNote } = useNotesCollection({
+		type,
+		period,
+		date,
 	});
-	const retroNotes = data as RetroNote[];
-
-	const saveRetroNote = useCallback(
-		(retroNote: RetroNote) =>
-			setDoc(doc(retroCollection, retroNote.id), retroNote).catch(
-				console.error,
-			),
-		[retroCollection],
-	);
+	const retroNotes = data as RetroNoteModel[];
 
 	const addRetroNote = (index: number) =>
-		addDoc(retroCollection, {
+		saveNote({
+			id: `${date}-${index}-${type}`,
 			date,
 			index,
-			type: 'retro',
+			type,
 			period,
-			retronote: '',
-		} as RetroNote);
+			note: '',
+		});
 
 	const isLoading = status === 'loading';
 	if (isLoading) {
@@ -98,7 +67,7 @@ export function RetroNotes({ period, date }: { period: string; date: string }) {
 			<ul className="list-inside list-none space-y-8 pl-0 text-gray-500 dark:text-gray-400">
 				{retroNotes.map(retroNote => (
 					<li key={retroNote.id}>
-						<RetroNote {...{ ...retroNote }} handleSave={saveRetroNote} />
+						<RetroNote {...{ ...retroNote }} handleSave={saveNote} />
 					</li>
 				))}
 			</ul>

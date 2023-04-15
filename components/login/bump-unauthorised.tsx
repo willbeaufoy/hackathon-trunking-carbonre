@@ -1,5 +1,5 @@
 import { useSigninCheck } from 'reactfire';
-import { Loading } from './loading';
+import { Loading } from '../loading';
 import RedirectTo from './redirect-to';
 
 export default function BumpUnauthorised({ children }) {
