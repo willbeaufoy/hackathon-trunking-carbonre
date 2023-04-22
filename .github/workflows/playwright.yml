@@ -22,7 +22,7 @@ jobs:
       - name: Run Playwright tests
         env:
           NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
-        run: CI=true npx playwright test
+        run: CI=true npx playwright test --reporter=html
       - uses: actions/upload-artifact@v3
         if: always()
         with:
