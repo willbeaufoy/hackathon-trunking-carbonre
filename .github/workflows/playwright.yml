@@ -15,13 +15,32 @@ jobs:
           node-version: 16
       - name: Install dependencies
         run: npm ci
+      - name: Install firebase-tools
+        run: npm install -g firebase-tools
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: CI=true npx playwright test
+        env:
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+        run: CI=true npx playwright test --reporter=html
       - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: playwright-report/
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2

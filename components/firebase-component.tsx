@@ -58,7 +58,7 @@ export function FirestoreComponent({ children }) {
 		{ suspense: false },
 	);
 
-	if (status === 'loading') {
+	if (status === 'loading' || !isBrowser()) {
 		return <p>Loading...</p>;
 	}
 

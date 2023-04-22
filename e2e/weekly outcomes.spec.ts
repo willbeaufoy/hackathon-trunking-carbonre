@@ -43,7 +43,7 @@ test('manage many weekly outcomes', async ({ page }) => {
 		expect(await outcomes.all()).toHaveLength(3);
 	}
 
-	await page.getByRole('link', { name: 'Weekly' }).click();
+	await page.getByRole('link', { name: 'This week' }).click();
 
 	{
 		await expectTitleIs(page, '2022-W11');
@@ -81,7 +81,7 @@ test('create monthly outcomes and persist them', async ({ page }) => {
 	];
 
 	await expectTitleIs(page, 'Tue, Mar 15');
-	await page.getByRole('link', { name: 'Weekly' }).click();
+	await page.getByRole('link', { name: 'This week' }).click();
 
 	{
 		await expectTitleIs(page, '2022-W11');
@@ -123,7 +123,7 @@ test('create monthly outcomes and persist them', async ({ page }) => {
 // SO THAT I can save note on my week
 test('create weekly retro notes and persist them', async ({ page }) => {
 	await expectTitleIs(page, 'Tue, Mar 15');
-	await page.getByRole('link', { name: 'Weekly' }).click();
+	await page.getByRole('link', { name: 'This week' }).click();
 
 	{
 		await expectTitleIs(page, '2022-W11');
