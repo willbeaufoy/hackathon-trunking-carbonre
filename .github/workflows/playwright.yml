@@ -31,3 +31,7 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+  update-gh-pages:
+    uses: ./.github/workflows/deploy_pages.yml
+    if: always()
+
