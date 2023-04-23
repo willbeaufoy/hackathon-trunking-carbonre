@@ -1,20 +1,22 @@
 name: Deploy Pages
 on:
-    workflow_dispatch:
+  push:
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
-    
-    
+
 jobs:
   build:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     env:
-        GH_TOKEN: ${{ github.token }}
+      GH_TOKEN: ${{ github.token }}
     steps:
+      - uses: actions/checkout@v3
       - name: Test GH
         run: |
           gh run list
