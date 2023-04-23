@@ -21,6 +21,8 @@ jobs:
         env:
           E2E_PATH: gh-pages/artifacts/e2e-tests
         run: |
+          set +x
+          
           gh run list \
               --branch main  \
               --status completed \
