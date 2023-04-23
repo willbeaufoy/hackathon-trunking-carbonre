@@ -18,11 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Fetch all available Playwright reports
+        shell: bash {0}
         env:
           E2E_PATH: gh-pages/artifacts/e2e-tests
         run: |
-          set +x
-          
           gh run list \
               --branch main  \
               --status completed \
