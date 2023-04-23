@@ -23,7 +23,6 @@ jobs:
         run: |
           gh run list \
               --branch main  \
-              --status completed \
               --workflow "Playwright Tests" \
               --json databaseId,displayTitle \
           | jq -c '.[]' \
