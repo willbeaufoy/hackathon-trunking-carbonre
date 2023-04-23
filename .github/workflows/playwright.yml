@@ -36,10 +36,14 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+      - name: Prepare artifact for pages
+        run: |
+          mkdir -p e2e-report/0000
+          cp -r playwright-report/* e2e-report/0000
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: playwright-report/
+          path: e2e-report
 
   deploy:
     environment:
