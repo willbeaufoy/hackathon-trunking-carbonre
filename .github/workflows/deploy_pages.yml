@@ -34,12 +34,12 @@ jobs:
 
               filename="${databaseId}-${displayTitle// /-}"
               directory="${E2E_PATH}/${filename:0:60}"
+              directory=$(echo "$directory" | sed -E 's/[^[:alnum:]_-]+/-/g')
 
               echo $directory
               gh run download "$databaseId" -D "$directory" -n playwright-report
               echo
           done
-          exit 0
       - name: Generate index for artifacts
         working-directory: ./gh-pages/artifacts
         run: tree -L 2 -P '**/' -r -H . -T artifacts -o index.html
