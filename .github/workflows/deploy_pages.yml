@@ -32,9 +32,8 @@ jobs:
               databaseId=$(echo "$object" | jq -r '.databaseId')
               displayTitle=$(echo "$object" | jq -r '.displayTitle')
 
-              filename="${databaseId}-${displayTitle// /-}"
+              filename=$(echo "${databaseId}-${displayTitle}" | sed -E 's/[^[:alnum:]_-]/_/g; s/ +/_/g')
               directory="${E2E_PATH}/${filename:0:60}"
-              directory=$(echo "$directory" | sed -E 's/[^[:alnum:]_-]+/-/g')
 
               echo $directory
               gh run download "$databaseId" -D "$directory" -n playwright-report
