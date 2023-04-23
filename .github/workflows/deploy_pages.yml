@@ -1,0 +1,20 @@
+name: Deploy Pages
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+    
+    
+jobs:
+  build:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test GH
+        run: |
+          gh run list
