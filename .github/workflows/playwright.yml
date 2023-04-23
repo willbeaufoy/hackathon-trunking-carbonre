@@ -1,16 +1,11 @@
 name: Playwright Tests
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   pull_request:
-    branches: [main, master]
+    branches: [main]
+  workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-    
-    
 jobs:
   test:
     timeout-minutes: 60
@@ -36,22 +31,3 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-      - name: Prepare artifact for pages
-        run: |
-          mkdir -p e2e-report/0000
-          cp -r playwright-report/* e2e-report/0000
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: e2e-report
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2

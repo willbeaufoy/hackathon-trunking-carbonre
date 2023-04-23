@@ -17,6 +17,43 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v3
-      - name: Test GH
+      - name: Fetch all available Playwright reports
+        env:
+          E2E_PATH: gh-pages/artifacts/e2e-tests
         run: |
-          gh run list
+          gh run list \
+              --branch main  \
+              --status completed \
+              --workflow "Playwright Tests" \
+              --json databaseId,displayTitle \
+          | jq -c '.[]' \
+          | while read object; do
+              databaseId=$(echo "$object" | jq -r '.databaseId')
+              displayTitle=$(echo "$object" | jq -r '.displayTitle')
+
+              filename="${databaseId}-${displayTitle// /-}"
+              directory="${E2E_PATH}/${filename:0:60}"
+
+              echo $directory
+              gh run download "$databaseId" -D "$directory" -n playwright-report
+              echo
+          done
+          exit 0
+      - name: Generate index for artifacts
+        working-directory: ./gh-pages/artifacts
+        run: tree -L 2 -P '**/' -r -H . -T artifacts -o index.html
+      - name: Upload GH Pages artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: gh-pages
+
+    deploy:
+    environment:
+        name: github-pages
+        url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+        - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
