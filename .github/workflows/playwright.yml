@@ -18,8 +18,16 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
+      - name: Cache playwright binaries
+        uses: actions/cache@v3
+        id: playwright-cache
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
       - name: Run Playwright tests
         env:
           NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
@@ -30,4 +38,3 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-
