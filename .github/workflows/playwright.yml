@@ -41,7 +41,9 @@ jobs:
       - if: steps.playwright-cache.outputs.cache-hit != 'true'
         name: Install Playwright Browsers
         run: npx playwright install --with-deps
-
+      
+      - name: Collect Workflow Telemetry
+        uses: runforesight/workflow-telemetry-action@v1
       - name: Run Playwright tests
         env:
           NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
