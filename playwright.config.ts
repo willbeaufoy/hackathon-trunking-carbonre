@@ -97,6 +97,7 @@ if (process.env.CI === 'true') {
 		forbidOnly: !!process.env.CI,
 		retries: 2,
 		reporter: 'html',
+		workers: 2,
 	};
 }
 
