@@ -15,28 +15,32 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: npm
+
       - name: Cache node_modules
         uses: actions/cache@v3
         id: node_modules-cache
         with:
-          path: |
-            ./node_modules
+          path: ./node_modules
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-      - if: steps.node_modules-cache.outputs.cache-hit != 'true'
-        name: Install dependencies
-        run: npm ci
-
       - name: Cache playwright binaries
         uses: actions/cache@v3
         id: playwright-cache
         with:
-          path: |
-            ~/.cache/ms-playwright
+          path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
-      - name: Install Playwright Browsers
+      - name: Cache firebase emulators
+        uses: actions/cache@v3
+        id: firebase-cache
+        with:
+          path: ~/.cache/firebase/emulators/
+          key: ${{ runner.os }}-firebase-${{ hashFiles('**/package-lock.json') }}
+
+      - if: steps.node_modules-cache.outputs.cache-hit != 'true'
+        name: Install dependencies
+        run: npm ci
+      - if: steps.playwright-cache.outputs.cache-hit != 'true'
+        name: Install Playwright Browsers
         run: npx playwright install --with-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
 
       - name: Run Playwright tests
         env:

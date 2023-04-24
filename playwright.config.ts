@@ -77,11 +77,18 @@ let config: PlaywrightTestConfig = {
 	// outputDir: 'test-results/',
 	/* Run your local dev server before starting the tests */
 	// globalSetup: require.resolve('./global-setup',
-	/* Run your local dev server before starting the tests */
-	// webServer: {
-	//   command: 'npm run start',
-	//   port: 3000,
-	// },
+	webServer: [
+		{
+			command: 'npm run dev',
+			port: 3000,
+			reuseExistingServer: true,
+		},
+		{
+			command: 'npm run firebase:start',
+			port: 4000,
+			reuseExistingServer: true,
+		},
+	],
 };
 
 if (process.env.CI === 'true') {
@@ -90,10 +97,6 @@ if (process.env.CI === 'true') {
 		forbidOnly: !!process.env.CI,
 		retries: 2,
 		reporter: 'html',
-		webServer: {
-			command: 'npm run firebase:dev',
-			port: 3000,
-		},
 	};
 }
 
