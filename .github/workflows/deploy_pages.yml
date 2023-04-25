@@ -42,9 +42,9 @@ jobs:
               directory="${SAVE_PATH}/${filename:0:60}"
 
               echo $directory
-              gh run download "$databaseId" -D "$directory" -n playwright-report
-              echo
+              gh run download "$databaseId" -D "$directory" -n playwright-report &
           done
+          wait
       - name: Fetch all available Playwright Smoke tests reports
         shell: bash {0}
         env:
@@ -65,9 +65,9 @@ jobs:
               directory="${SAVE_PATH}/${filename:0:60}"
 
               echo $directory
-              gh run download "$databaseId" -D "$directory" -n playwright-report
-              echo
+              gh run download "$databaseId" -D "$directory" -n playwright-report &
           done
+          wait
       - name: Generate index for artifacts
         working-directory: ./gh-pages/artifacts
         run: tree -L 2 -P '**/' -r -H . -T artifacts -o index.html
