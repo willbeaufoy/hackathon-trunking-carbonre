@@ -105,7 +105,7 @@ if (process.env.SMOKE_TEST === 'true') {
 	config = {
 		...config,
 		use: {
-			...config,
+			...config.use,
 			baseURL: 'https://nextjs13-template-vercel.vercel.app/',
 		},
 		webServer: undefined,

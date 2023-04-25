@@ -30,14 +30,15 @@ jobs:
           gh run list \
               --branch main  \
               --workflow "Playwright Tests" \
-              --json databaseId,displayTitle,status \
+              --json databaseId,displayTitle,status,headSha \
           | jq -c '.[]' \
           | while read object; do
               databaseId=$(echo "$object" | jq -r '.databaseId')
               displayTitle=$(echo "$object" | jq -r '.displayTitle')
               status=$(echo "$object" | jq -r '.status')
+              headSha=$(echo "$object" | jq -r '.headSha')
 
-              filename=$(echo "${databaseId}-${status}-${displayTitle}" | sed -E 's/[^[:alnum:]_-]/_/g; s/ +/_/g')
+              filename=$(echo "run:${databaseId}-sha:${headSha:0:7}-status:${status}-title:${displayTitle}" | sed -E 's/[^[:alnum:]_-]/_/g; s/ +/_/g')
               directory="${SAVE_PATH}/${filename:0:60}"
 
               echo $directory
@@ -52,14 +53,15 @@ jobs:
           gh run list \
               --branch main  \
               --workflow "Smoke tests" \
-              --json databaseId,displayTitle,status \
+              --json databaseId,displayTitle,status,headSha \
           | jq -c '.[]' \
           | while read object; do
               databaseId=$(echo "$object" | jq -r '.databaseId')
               displayTitle=$(echo "$object" | jq -r '.displayTitle')
               status=$(echo "$object" | jq -r '.status')
+              headSha=$(echo "$object" | jq -r '.headSha')
 
-              filename=$(echo "${databaseId}-${status}-${displayTitle}" | sed -E 's/[^[:alnum:]_-]/_/g; s/ +/_/g')
+              filename=$(echo "run:${databaseId}-sha:${headSha:0:7}-status:${status}-title:${displayTitle}" | sed -E 's/[^[:alnum:]_-]/_/g; s/ +/_/g')
               directory="${SAVE_PATH}/${filename:0:60}"
 
               echo $directory
