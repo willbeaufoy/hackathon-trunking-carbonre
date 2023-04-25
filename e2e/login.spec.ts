@@ -1,12 +1,34 @@
 import { test, expect } from '@playwright/test';
 import { getRandomChars } from './helpers/tools';
-import { login, signup, validateEmail } from './helpers/user-management';
+import {
+	deleteUser,
+	login,
+	signup,
+	validateEmail,
+} from './helpers/user-management';
+
+test.beforeEach(({}, testInfo) => {
+	const myEmail = `test-${getRandomChars()}@test.com`;
+
+	testInfo.attach('email', { body: myEmail });
+});
+
+test.afterEach(async ({ page }, testInfo) => {
+	page.close();
+	const myEmail = testInfo.attachments
+		.find(({ name }) => name === 'email')
+		.body.toString();
+
+	await deleteUser(myEmail);
+});
 
 // AS A new user
 // I WANT TO sign up
 // SO THAT I can use the app
-test('new users can sign up / sign in', async ({ page }) => {
-	const myEmail = `test-${getRandomChars()}@test.com`;
+test('new users can sign up / sign in', async ({ page }, testInfo) => {
+	const myEmail = testInfo.attachments
+		.find(({ name }) => name === 'email')
+		.body.toString();
 	const myPassword = 'password';
 
 	// go to landing page

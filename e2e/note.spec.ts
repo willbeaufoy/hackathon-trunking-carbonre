@@ -1,15 +1,25 @@
 import { expect, test } from '@playwright/test';
 import { getRandomChars } from './helpers/tools';
-import { signupAndLogin } from './helpers/user-management';
+import { deleteUser, signupAndLogin } from './helpers/user-management';
+
+test.beforeEach(async ({ page }, testInfo) => {
+	const myEmail = `test-${getRandomChars()}@test.com`;
+	testInfo.attach('email', { body: myEmail });
+
+	await signupAndLogin(page, myEmail);
+});
+
+test.afterEach(async ({ page }, testInfo) => {
+	page.close();
+	const myEmail = testInfo.attachments
+		.find(({ name }) => name === 'email')
+		.body.toString();
+
+	await deleteUser(myEmail);
+});
 
 test('user can CRUD notes', async ({ page }) => {
-	const myEmail = `test-${getRandomChars()}@test.com`;
-	const myPassword = 'password';
-
 	///// TODO unauthorised will be bumped
-
-	// go to landing page
-	await signupAndLogin(page, myEmail, myPassword);
 
 	//// go to notes
 	await page.getByRole('link', { name: 'Notes' }).click();

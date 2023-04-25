@@ -10,17 +10,26 @@ import {
 	expectNoRetroNotesExisting,
 } from './helpers/outcome';
 import { getRandomChars, mockDate } from './helpers/tools';
-import { signupAndLogin } from './helpers/user-management';
+import { deleteUser, signupAndLogin } from './helpers/user-management';
 
 const fakeNow = new Date('March 15 2022 13:37:11').valueOf();
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page }, testInfo) => {
 	await page.addInitScript(mockDate(fakeNow));
 
 	const myEmail = `test-${getRandomChars()}@test.com`;
-	const myPassword = 'password';
+	testInfo.attach('email', { body: myEmail });
 
-	await signupAndLogin(page, myEmail, myPassword);
+	await signupAndLogin(page, myEmail);
+});
+
+test.afterEach(async ({ page }, testInfo) => {
+	page.close();
+	const myEmail = testInfo.attachments
+		.find(({ name }) => name === 'email')
+		.body.toString();
+
+	await deleteUser(myEmail);
 });
 
 // AS A user

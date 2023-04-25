@@ -36,3 +36,4 @@ yarn-error.log*
 /playwright-report/
 /playwright/.cache/
 .vscode/
+.env.e2e

@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows:
       - Playwright Tests
+      - Smoke tests
     types:
       - completed
 
@@ -23,19 +24,42 @@ jobs:
       - name: Fetch all available Playwright reports
         shell: bash {0}
         env:
-          E2E_PATH: gh-pages/artifacts/e2e-tests
+          SAVE_PATH: gh-pages/artifacts/e2e-tests
         run: |
           gh run list \
               --branch main  \
               --workflow "Playwright Tests" \
-              --json databaseId,displayTitle \
+              --json databaseId,displayTitle,status \
           | jq -c '.[]' \
           | while read object; do
               databaseId=$(echo "$object" | jq -r '.databaseId')
               displayTitle=$(echo "$object" | jq -r '.displayTitle')
+              status=$(echo "$object" | jq -r '.status')
 
-              filename=$(echo "${databaseId}-${displayTitle}" | sed -E 's/[^[:alnum:]_-]/_/g; s/ +/_/g')
-              directory="${E2E_PATH}/${filename:0:60}"
+              filename=$(echo "${databaseId}-${status}-${displayTitle}" | sed -E 's/[^[:alnum:]_-]/_/g; s/ +/_/g')
+              directory="${SAVE_PATH}/${filename:0:60}"
+
+              echo $directory
+              gh run download "$databaseId" -D "$directory" -n playwright-report
+              echo
+          done
+      - name: Fetch all available Playwright Smoke tests reports
+        shell: bash {0}
+        env:
+          SAVE_PATH: gh-pages/artifacts/smoke-tests
+        run: |
+          gh run list \
+              --branch main  \
+              --workflow "Smoke tests" \
+              --json databaseId,displayTitle,status \
+          | jq -c '.[]' \
+          | while read object; do
+              databaseId=$(echo "$object" | jq -r '.databaseId')
+              displayTitle=$(echo "$object" | jq -r '.displayTitle')
+              status=$(echo "$object" | jq -r '.status')
+
+              filename=$(echo "${databaseId}-${status}-${displayTitle}" | sed -E 's/[^[:alnum:]_-]/_/g; s/ +/_/g')
+              directory="${SAVE_PATH}/${filename:0:60}"
 
               echo $directory
               gh run download "$databaseId" -D "$directory" -n playwright-report

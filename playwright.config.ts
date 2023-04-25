@@ -101,4 +101,18 @@ if (process.env.CI === 'true') {
 	};
 }
 
+if (process.env.SMOKE_TEST === 'true') {
+	config = {
+		...config,
+		use: {
+			...config,
+			baseURL: 'https://nextjs13-template-vercel.vercel.app/',
+		},
+		webServer: undefined,
+	};
+} else {
+	process.env.FIREBASE_AUTH_EMULATOR_HOST = 'localhost:9099';
+	process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
+}
+
 export default defineConfig(config);

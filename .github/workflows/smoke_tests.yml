@@ -1,13 +1,15 @@
-name: Playwright Tests
+name: Smoke tests
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
+  workflow_run:
+    workflows:
+      - Vercel Production Deployment
+    types:
+      - completed
 
 jobs:
   test:
+    if: ${{ !(github.event.workflow_run) || github.event.workflow_run.conclusion == 'success' }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -41,16 +43,15 @@ jobs:
       - if: steps.playwright-cache.outputs.cache-hit != 'true'
         name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      
+
       - name: Collect Workflow Telemetry
         uses: runforesight/workflow-telemetry-action@v1
-      - name: Run Playwright tests
+      - name: Run Playwright smoke tests
         env:
-          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
           FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
-        run: CI=true test:playwright
+        run: CI=true test:playwright:smoke-test
       - uses: actions/upload-artifact@v3
         if: always()
         with:
