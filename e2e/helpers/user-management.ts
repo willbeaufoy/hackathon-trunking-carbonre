@@ -19,7 +19,8 @@ async function retry<T extends () => any>(fn: T): Promise<ReturnType<T>> {
 }
 
 export async function validateEmail(myEmail: string) {
-	const user = await retry(() => auth.getUserByEmail(myEmail));
+	// const user = await retry(() => auth.getUserByEmail(myEmailllllll));
+	const user = await auth.getUserByEmail(myEmail);
 	await auth.updateUser(user.uid, { emailVerified: true });
 }
 
