@@ -98,6 +98,7 @@ Here some VSCode extensions that will make your life easier:
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 - [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 - [Pretty TypeScript Errors](https://marketplace.visualstudio.com/items?itemName=yoavbls.pretty-ts-errors)
+- [GitHub Actions](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-github-actions)
 
 You might want to experiment with Copilot et similia for this project:
 - [GitHub Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot)
