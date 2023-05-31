@@ -106,7 +106,7 @@ if (process.env.SMOKE_TEST === 'true') {
 		...config,
 		use: {
 			...config.use,
-			baseURL: 'https://nextjs13-template-vercel.vercel.app/',
+			baseURL: 'https://trunking-carbonre.vercel.app/',
 		},
 		webServer: undefined,
 	};
