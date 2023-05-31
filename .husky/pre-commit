@@ -2,3 +2,4 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npm exec lint-staged
+(( $(git diff | wc -l) < 101 )) || (echo 'SMALL COMMITS ONLY!!! git diff cannot be longer than 100 lines' && exit 1)
