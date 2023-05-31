@@ -30,6 +30,7 @@ test('new users can sign up / sign in', async ({ page }, testInfo) => {
 		.find(({ name }) => name === 'email')
 		.body.toString();
 	const myPassword = 'password';
+	throw new Error('fail!');
 
 	// go to landing page
 	await page.goto('/');
