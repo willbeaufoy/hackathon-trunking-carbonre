@@ -17,7 +17,7 @@ const firestore = getFirestore(app);
 async function retry<T extends () => any>(fn: T): Promise<ReturnType<T>> {
 	return Promise.any([0, 100, 500].map(ms => setTimeout(ms).then(fn))).catch(
 		err => {
-			console.log(err);
+			err.errors.forEach(console.error);
 			throw err;
 		},
 	);
