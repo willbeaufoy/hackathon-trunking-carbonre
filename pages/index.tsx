@@ -12,7 +12,7 @@ export default function Home() {
 					ZenFocus
 				</h1>
 				<p className="text-lg font-normal text-gray-500 dark:text-gray-400 lg:text-xl">
-					DAJE NANTAS
+					It is all good my friend.
 				</p>
 			</section>
 			<Link
