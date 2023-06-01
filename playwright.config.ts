@@ -83,11 +83,11 @@ let config: PlaywrightTestConfig = {
 			port: 3000,
 			reuseExistingServer: true,
 		},
-		// {
-		// 	command: 'npm run firebase:start',
-		// 	port: 4000,
-		// 	reuseExistingServer: true,
-		// },
+		{
+			command: 'npm run firebase:start',
+			port: 4000,
+			reuseExistingServer: true,
+		},
 	],
 };
 
