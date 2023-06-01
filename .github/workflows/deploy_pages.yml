@@ -68,6 +68,8 @@ jobs:
               gh run download "$databaseId" -D "$directory" -n playwright-report &
           done
           wait
+      - run: pwd
+      - run: tree
       - name: Generate index for artifacts
         working-directory: ./gh-pages/artifacts
         run: tree -L 2 -P '**/' -r -H . -T artifacts -o index.html
