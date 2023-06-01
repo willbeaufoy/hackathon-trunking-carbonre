@@ -38,6 +38,8 @@ jobs:
       - if: steps.node_modules-cache.outputs.cache-hit != 'true'
         name: Install dependencies
         run: npm ci
+      - name: Test firebase
+        run: npm exec firebase emulators:exec ls
       - if: steps.playwright-cache.outputs.cache-hit != 'true'
         name: Install Playwright Browsers
         run: npx playwright install --with-deps
