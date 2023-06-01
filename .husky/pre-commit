@@ -3,5 +3,4 @@
 
 npm exec lint-staged
 
-#if (( $(git diff | awk 'END {print NR}') > 0 )); then echo 'You must commit all your changes.'; exit 1; fi
 if (( $(git diff --cached | awk 'END {print NR}') > 99 )); then echo 'SMALL COMMITS ONLY!!! git diff cannot be longer than 100 lines'; exit 1; fi
