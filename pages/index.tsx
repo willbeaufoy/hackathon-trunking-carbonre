@@ -12,7 +12,6 @@ export default function Home() {
 					ZenFocus
 				</h1>
 				<p className="text-lg font-normal text-gray-500 dark:text-gray-400 lg:text-xl">
-					CIAO NANTAS. <br />
 					The Agile Results app that helps you work flexibly and iteratively
 					towards your goals.
 				</p>
