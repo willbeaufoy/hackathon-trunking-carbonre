@@ -19,18 +19,18 @@ jobs:
           cache: npm
       - name: Cache build & node_modules
         uses: actions/cache@v3
-        id: node_modules-cache
+        id: build-node_modules-cache
         with:
           path: |
             ./node_modules
-            .next/cache
+            ./.next/cache
+            ./.vercel
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}                
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      - if: steps.build-node_modules-cache.outputs.cache-hit != 'true'
+        name: Pull Vercel Environment Information
+        run: npm exec vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
       - name: Build Project Artifacts
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: npm exec vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
       - name: Deploy Project Artifacts to Vercel
