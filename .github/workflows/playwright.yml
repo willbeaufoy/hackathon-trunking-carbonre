@@ -40,6 +40,11 @@ jobs:
         run: npm ci
       - name: Test firebase
         run: npm exec firebase emulators:exec ls
+        env:
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+          FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
       - if: steps.playwright-cache.outputs.cache-hit != 'true'
         name: Install Playwright Browsers
         run: npx playwright install --with-deps
