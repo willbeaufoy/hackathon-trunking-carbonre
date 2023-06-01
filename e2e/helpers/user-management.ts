@@ -15,7 +15,12 @@ const auth = getAuth(app);
 const firestore = getFirestore(app);
 
 async function retry<T extends () => any>(fn: T): Promise<ReturnType<T>> {
-	return Promise.any([0, 100, 500].map(ms => setTimeout(ms).then(fn)));
+	return Promise.any([0, 100, 500].map(ms => setTimeout(ms).then(fn))).catch(
+		err => {
+			console.log(err);
+			throw err;
+		},
+	);
 }
 
 export async function validateEmail(myEmail: string) {
