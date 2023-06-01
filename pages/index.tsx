@@ -12,7 +12,7 @@ export default function Home() {
 					ZenFocus
 				</h1>
 				<p className="text-lg font-normal text-gray-500 dark:text-gray-400 lg:text-xl">
-					Boost productivity with ZenFocus. <br />
+					Booost productivity with ZenFocus. <br />
 					The Agile Results app that helps you work flexibly and iteratively
 					towards your goals.
 				</p>
