@@ -9,6 +9,12 @@ function Page() {
 				<form>
 					<label htmlFor="Input">Send</label>
 					<input id="input" type="text" />
+					<button
+						type="submit"
+						className="block w-36 rounded-full bg-green-300 bg-center py-3 text-center text-base font-normal text-black shadow-xl hover:bg-green-400 focus:ring-4 focus:ring-green-200 dark:focus:ring-green-900 sm:w-72"
+					>
+						Send
+					</button>
 				</form>
 			</section>
 		</>
