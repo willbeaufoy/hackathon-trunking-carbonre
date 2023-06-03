@@ -21,10 +21,19 @@ test.afterEach(async ({ page }, testInfo) => {
 	}
 });
 
-function setFlag(page: Page, flagName: string, value: string) {
-	const url = new URL(page.url());
-	url.searchParams.set(`feature-${flagName}`, value);
-	return page.goto(url.toString());
+async function setFlag(
+	page: Page,
+	flagName: string,
+	value: string,
+): Promise<void> {
+	await page.evaluate(
+		([flagName, value]) => {
+			localStorage.setItem(`feature-${flagName}`, value);
+		},
+		[flagName, value],
+	);
+	await page.reload();
+	return;
 }
 
 test('can test new page', async ({ page }) => {
