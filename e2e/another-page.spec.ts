@@ -52,8 +52,10 @@ test.describe('when user is authorised', () => {
 		).toBeVisible();
 
 		// TODO
-		// // in the section "sender", enter "test" in the input and press "Send"
-		// await page.getByRole('region', { name: 'sender' }).getByRole('textbox').fill('test');
+		await page
+			.getByRole('region', { name: 'sender' })
+			.getByRole('textbox')
+			.fill('test');
 		// await page.getByRole('region', { name: 'sender' }).getByRole('button', { name: 'Send' }).click();
 
 		// // in the section "receiver", check that the text "test" is visible
