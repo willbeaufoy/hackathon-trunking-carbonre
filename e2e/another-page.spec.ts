@@ -22,6 +22,8 @@ test.afterEach(async ({ page }, testInfo) => {
 });
 
 test('can test new page', async ({ page }) => {
+	expect(page.getByRole('link', { name: 'Another page' })).not.toBeVisible();
+
 	await setTimeout(500);
 	const url = new URL(page.url());
 	url.searchParams.set('feature-another-page', 'true');
