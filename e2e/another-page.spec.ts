@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { getRandomChars } from './helpers/tools';
 import { deleteUser, signupAndLogin } from './helpers/user-management';
 import { setTimeout } from 'timers/promises';
@@ -21,13 +21,19 @@ test.afterEach(async ({ page }, testInfo) => {
 	}
 });
 
-test('can test new page', async ({ page }) => {
-	expect(page.getByRole('link', { name: 'Another page' })).not.toBeVisible();
-
-	await setTimeout(500);
+function setFlag(page: Page, flagName: string, value: string) {
 	const url = new URL(page.url());
-	url.searchParams.set('feature-another-page', 'true');
-	await page.goto(url.toString());
+	url.searchParams.set(`feature-${flagName}`, value);
+	return page.goto(url.toString());
+}
+
+test('can test new page', async ({ page }) => {
+	await expect(
+		page.getByRole('heading', { name: 'Weekly Outcomes' }),
+	).toBeVisible();
+
+	expect(page.getByRole('link', { name: 'Another page' })).not.toBeVisible();
+	await setFlag(page, 'another-page', 'true');
 
 	// WIP
 	// await page.getByRole('link', { name: 'Another page' }).click();
