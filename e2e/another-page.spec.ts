@@ -47,9 +47,11 @@ test('can test new page', async ({ page }) => {
 	await setFlag(page, 'another-page', 'true');
 
 	await page.getByRole('link', { name: 'Another page' }).click();
-	// WIP
-	// await expect(page.getByRole('heading', { name: 'Another page' })).toBeVisible();
+	await expect(
+		page.getByRole('heading', { name: 'Another page' }),
+	).toBeVisible();
 
+	// WIP
 	// // in the section "sender", enter "test" in the input and press "Send"
 	// await page.getByRole('region', { name: 'sender' }).getByRole('textbox').fill('test');
 	// await page.getByRole('region', { name: 'sender' }).getByRole('button', { name: 'Send' }).click();
