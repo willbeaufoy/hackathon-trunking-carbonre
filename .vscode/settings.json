@@ -1,0 +1,16 @@
+{
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "eslint.validate": ["javascript", "typescript"],
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "files.autoSave": "afterDelay",
+    "playwright.reuseBrowser": true,
+    "git.autofetch": true,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "editor.linkedEditing": true,
+    "eslint.format.enable": true,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+}

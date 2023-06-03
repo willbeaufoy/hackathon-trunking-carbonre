@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "ms-playwright.playwright",
+        "ryanrosello-og.playwright-vscode-trace-viewer",
+        "MS-vsliveshare.vsliveshare",
+        "bradlc.vscode-tailwindcss",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "yoavbls.pretty-ts-errors"
+    ]
+}

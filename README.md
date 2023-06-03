@@ -86,19 +86,20 @@ Every commit to `main` will trigger a deployment to the prod environment.
 ### VSCode
 Congratulations! You have set up the project!  
 
-It is almost a requirement that you [get VSCode](https://code.visualstudio.com/download) for this project.
-
-Reason being is the following extension:
+Now do [get VSCode](https://code.visualstudio.com/download) and the following extension:
 - [Playwright Test for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright)
 - [Playwright Trace Viewer for VSCode](https://marketplace.visualstudio.com/items?itemName=ryanrosello-og.playwright-vscode-trace-viewer)
 - [Live Share](https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare)
 - [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
 
 Here some VSCode extensions that will make your life easier:
-- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) with [AutoSave](https://www.digitalocean.com/community/tutorials/workflow-auto-eslinting)
 - [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 - [Pretty TypeScript Errors](https://marketplace.visualstudio.com/items?itemName=yoavbls.pretty-ts-errors)
 - [GitHub Actions](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-github-actions)
+
+Once you install VSCode these extensions will be recommended.
+ESLint and Prettier comes preconfigured on this project.
 
 You might want to experiment with Copilot et similia for this project:
 - [GitHub Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot)
