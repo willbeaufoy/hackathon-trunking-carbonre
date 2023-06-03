@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { useUser } from 'reactfire';
-
-const isFeatureSet = (flagName: string): boolean =>
-	localStorage.getItem(`feature-${flagName}`) === 'true';
+import { isFeatureSet } from './feature-flags';
 
 export default function Layout({ children }) {
 	const { data: user } = useUser();
