@@ -41,11 +41,13 @@ test('can test new page', async ({ page }) => {
 		page.getByRole('heading', { name: 'Weekly Outcomes' }),
 	).toBeVisible();
 
-	expect(page.getByRole('link', { name: 'Another page' })).not.toBeVisible();
+	await expect(
+		page.getByRole('link', { name: 'Another page' }),
+	).not.toBeVisible();
 	await setFlag(page, 'another-page', 'true');
 
+	await page.getByRole('link', { name: 'Another page' }).click();
 	// WIP
-	// await page.getByRole('link', { name: 'Another page' }).click();
 	// await expect(page.getByRole('heading', { name: 'Another page' })).toBeVisible();
 
 	// // in the section "sender", enter "test" in the input and press "Send"

@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { useUser } from 'reactfire';
 
+const isFeatureSet = (flagName: string): boolean =>
+	localStorage.getItem(`feature-${flagName}`) === 'true';
+
 export default function Layout({ children }) {
 	const { data: user } = useUser();
 
@@ -20,6 +23,11 @@ export default function Layout({ children }) {
 							<li className="mb-2">
 								<Link href="/app/weekly/thisWeek">This week</Link>
 							</li>
+							{isFeatureSet('another-page') && (
+								<li className="mb-2">
+									<Link href="/app/another-page">Another page</Link>
+								</li>
+							)}
 							<li className="mb-2">
 								<Link href="/sign-out">Sign out</Link>
 							</li>
