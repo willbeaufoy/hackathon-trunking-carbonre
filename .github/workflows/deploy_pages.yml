@@ -36,7 +36,7 @@ jobs:
               headSha=$(echo "$object" | jq -r '.headSha')
 
               filename=$(echo "run:${databaseId}-sha:${headSha:0:7}-status:${status}-title:${displayTitle}" | sed -E 's/[^[:alnum:]_-]/_/g; s/ +/_/g')
-              directory="${SAVE_PATH}/${filename:0:60}"
+              directory="${SAVE_PATH}/${filename:0:100}"
 
               echo $directory
               gh run download "$databaseId" -D "$directory" -n playwright-report &
@@ -59,7 +59,7 @@ jobs:
               headSha=$(echo "$object" | jq -r '.headSha')
 
               filename=$(echo "run:${databaseId}-sha:${headSha:0:7}-status:${status}-title:${displayTitle}" | sed -E 's/[^[:alnum:]_-]/_/g; s/ +/_/g')
-              directory="${SAVE_PATH}/${filename:0:60}"
+              directory="${SAVE_PATH}/${filename:0:100}"
 
               echo $directory
               gh run download "$databaseId" -D "$directory" -n playwright-report &
