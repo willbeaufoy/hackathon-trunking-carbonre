@@ -55,8 +55,10 @@ test.describe('when user is authorised', () => {
 		await sender.getByRole('textbox').fill('test');
 		await sender.getByRole('button', { name: 'Send' }).click();
 
-		// TODO
-		// await expect(page.getByRole('region', { name: 'receiver' }).getByText('test')).toBeVisible();
+		// TODO use firebase
+		await expect(
+			page.getByRole('region', { name: 'receiver' }).getByText('Message 1'),
+		).toBeVisible();
 	});
 
 	test('cannot test new page', async ({ page }) => {

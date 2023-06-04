@@ -18,6 +18,10 @@ function Page() {
 					</button>
 				</form>
 			</section>
+			<section aria-labelledby="h2receiver">
+				<h2 id="h2receiver">Receiver</h2>
+				<p>Message 1 content</p>
+			</section>
 		</>
 	);
 }
