@@ -1,6 +1,6 @@
 import BumpUnauthorised from '@/components/login/bump-unauthorised';
 import BumpUnflagged from '@/components/login/bump-unflagged';
-import { doc } from '@firebase/firestore';
+import { doc, setDoc } from '@firebase/firestore';
 import { useAuth, useFirestore, useFirestoreDocData } from 'reactfire';
 
 function Page() {
@@ -20,7 +20,7 @@ function Page() {
 		const form = event.currentTarget;
 		const message = form.elements['input'].value;
 		form.reset();
-		console.log(message);
+		setDoc(stalkerDoc, { message }).catch(console.error);
 	};
 
 	return (
@@ -41,7 +41,7 @@ function Page() {
 			</section>
 			<section aria-labelledby="h2receiver">
 				<h2 id="h2receiver">Receiver</h2>
-				<p>Message 1 content</p>
+				<p>{data?.message}</p>
 			</section>
 		</>
 	);

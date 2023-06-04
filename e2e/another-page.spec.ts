@@ -51,13 +51,14 @@ test.describe('when user is authorised', () => {
 			page.getByRole('heading', { name: 'Another page' }),
 		).toBeVisible();
 
+		const loremIpsum =
+			'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
 		const sender = page.getByRole('region', { name: 'Sender' });
-		await sender.getByRole('textbox').fill('test');
+		await sender.getByRole('textbox').fill(loremIpsum);
 		await sender.getByRole('button', { name: 'Send' }).click();
 
-		// TODO use firebase
 		await expect(
-			page.getByRole('region', { name: 'receiver' }).getByText('Message 1'),
+			page.getByRole('region', { name: 'receiver' }).getByText(loremIpsum),
 		).toBeVisible();
 	});
 
