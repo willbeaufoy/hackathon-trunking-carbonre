@@ -1,7 +1,20 @@
 import BumpUnauthorised from '@/components/login/bump-unauthorised';
 import BumpUnflagged from '@/components/login/bump-unflagged';
+import { doc } from '@firebase/firestore';
+import { useAuth, useFirestore, useFirestoreDocData } from 'reactfire';
 
 function Page() {
+	const firestore = useFirestore();
+	const auth = useAuth();
+	const { uid } = auth.currentUser;
+	const stalkerDoc = doc(firestore, `users/${uid}/stalker/1`);
+	const { status, data } = useFirestoreDocData(stalkerDoc);
+
+	const isLoading = status === 'loading';
+	if (isLoading) {
+		return <p>Loading...</p>;
+	}
+
 	return (
 		<>
 			<h1>Another page</h1>
