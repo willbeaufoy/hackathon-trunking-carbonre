@@ -27,11 +27,11 @@ test.describe('when user is authorised', () => {
 			page.getByRole('heading', { name: 'Weekly Outcomes' }),
 		).toBeVisible();
 
-		await expect(
-			page.getByRole('link', { name: 'Another page' }),
-		).not.toBeVisible();
+		// await expect(
+		// 	page.getByRole('link', { name: 'Another page' }),
+		// ).not.toBeVisible();
 
-		await setFlag(page, 'another-page', 'true');
+		// await setFlag(page, 'another-page', 'true');
 		await page.getByRole('link', { name: 'Another page' }).click();
 		await expect(
 			page.getByRole('heading', { name: 'Another page' }),
@@ -48,10 +48,10 @@ test.describe('when user is authorised', () => {
 		).toBeVisible();
 	});
 
-	test('cannot test new page', async ({ page }) => {
-		await page.goto('/app/another-page');
-		await expect(page.getByRole('link', { name: 'Sign up' })).toBeVisible();
-	});
+	// test('cannot test new page', async ({ page }) => {
+	// 	await page.goto('/app/another-page');
+	// 	await expect(page.getByRole('link', { name: 'Sign up' })).toBeVisible();
+	// });
 });
 
 test.describe('when user is not authorised', () => {

@@ -21,11 +21,11 @@ export default function Layout({ children }) {
 							<li className="mb-2">
 								<Link href="/app/weekly/thisWeek">This week</Link>
 							</li>
-							{isFeatureSet('another-page') && (
-								<li className="mb-2">
-									<Link href="/app/another-page">Another page</Link>
-								</li>
-							)}
+							{/* {isFeatureSet('another-page') && ( */}
+							<li className="mb-2">
+								<Link href="/app/another-page">Another page</Link>
+							</li>
+							{/* )} */}
 							<li className="mb-2">
 								<Link href="/sign-out">Sign out</Link>
 							</li>

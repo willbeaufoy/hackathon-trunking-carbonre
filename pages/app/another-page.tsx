@@ -50,9 +50,9 @@ function Page() {
 export default function AnotherPage() {
 	return (
 		<BumpUnauthorised>
-			<BumpUnflagged flagName="another-page">
-				<Page />
-			</BumpUnflagged>
+			{/* <BumpUnflagged flagName="another-page"> */}
+			<Page />
+			{/* </BumpUnflagged> */}
 		</BumpUnauthorised>
 	);
 }
