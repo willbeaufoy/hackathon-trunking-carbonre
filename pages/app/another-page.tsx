@@ -15,12 +15,20 @@ function Page() {
 		return <p>Loading...</p>;
 	}
 
+	const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		const form = event.currentTarget;
+		const message = form.elements['input'].value;
+		form.reset();
+		console.log(message);
+	};
+
 	return (
 		<>
 			<h1>Another page</h1>
 			<section aria-labelledby="h2sender">
 				<h2 id="h2sender">Sender</h2>
-				<form>
+				<form onSubmit={handleOnSubmit}>
 					<label htmlFor="Input">Send</label>
 					<input id="input" type="text" />
 					<button
