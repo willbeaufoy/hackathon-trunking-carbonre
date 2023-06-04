@@ -5,7 +5,8 @@ function Page() {
 	return (
 		<>
 			<h1>Another page</h1>
-			<section aria-label="sender">
+			<section aria-labelledby="h2sender">
+				<h2 id="h2sender">Sender</h2>
 				<form>
 					<label htmlFor="Input">Send</label>
 					<input id="input" type="text" />

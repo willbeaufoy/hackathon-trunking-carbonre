@@ -44,24 +44,18 @@ test.describe('when user is authorised', () => {
 		await expect(
 			page.getByRole('link', { name: 'Another page' }),
 		).not.toBeVisible();
-		await setFlag(page, 'another-page', 'true');
 
+		await setFlag(page, 'another-page', 'true');
 		await page.getByRole('link', { name: 'Another page' }).click();
 		await expect(
 			page.getByRole('heading', { name: 'Another page' }),
 		).toBeVisible();
 
-		// TODO
-		await page
-			.getByRole('region', { name: 'sender' })
-			.getByRole('textbox')
-			.fill('test');
-		await page
-			.getByRole('region', { name: 'sender' })
-			.getByRole('button', { name: 'Send' })
-			.click();
+		const sender = page.getByRole('region', { name: 'Sender' });
+		await sender.getByRole('textbox').fill('test');
+		await sender.getByRole('button', { name: 'Send' }).click();
 
-		// // in the section "receiver", check that the text "test" is visible
+		// TODO
 		// await expect(page.getByRole('region', { name: 'receiver' }).getByText('test')).toBeVisible();
 	});
 
