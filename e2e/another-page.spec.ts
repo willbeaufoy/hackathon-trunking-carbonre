@@ -1,6 +1,7 @@
-import { Page, expect, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { getRandomChars } from './helpers/tools';
 import { deleteUser, signupAndLogin } from './helpers/user-management';
+import { setFlag } from './helpers/setFlag';
 
 test.describe('when user is authorised', () => {
 	test.beforeEach(async ({ page }, testInfo) => {
@@ -20,21 +21,6 @@ test.describe('when user is authorised', () => {
 			await deleteUser(myEmail);
 		}
 	});
-
-	async function setFlag(
-		page: Page,
-		flagName: string,
-		value: string,
-	): Promise<void> {
-		await page.evaluate(
-			([flagName, value]) => {
-				localStorage.setItem(`feature-${flagName}`, value);
-			},
-			[flagName, value],
-		);
-		await page.reload();
-		return;
-	}
 
 	test('can test new page', async ({ page }) => {
 		await expect(
