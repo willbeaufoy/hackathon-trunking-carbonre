@@ -6,14 +6,14 @@ import { setFlag } from './helpers/setFlag';
 test.describe('when user is authorised', () => {
 	test.beforeEach(async ({ page }, testInfo) => {
 		const myEmail = `test-${getRandomChars()}@test.com`;
-		testInfo.attach('email', { body: myEmail });
+		await testInfo.attach('email', { body: myEmail });
 
 		await signupAndLogin(page, myEmail);
 	});
 
 	test.afterEach(async ({ page }, testInfo) => {
 		if (process.env.SMOKE_TEST === 'true') {
-			page.close();
+			await page.close();
 			const myEmail = testInfo.attachments
 				.find(({ name }) => name === 'email')
 				.body.toString();
