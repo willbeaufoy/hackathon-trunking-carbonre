@@ -5,11 +5,11 @@ export default function Home() {
 	return (
 		<main className="mx-auto flex min-h-full w-full max-w-xs flex-col items-center justify-evenly bg-white text-center dark:bg-gray-900 sm:max-w-screen-md">
 			<div className="relative h-32 w-32 md:h-48 md:w-48">
-				<Image src="/logo.png" alt="logo" fill />
+				<Image src="/logo.jpeg" alt="logo" fill />
 			</div>
 			<section className="after:content-['\a0']">
 				<h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
-					ZenFocus
+					Landing page
 				</h1>
 				<p className="text-lg font-normal text-gray-500 dark:text-gray-400 lg:text-xl">
 					It is all good my friend.

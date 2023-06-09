@@ -7,14 +7,14 @@ import {
 	validateEmail,
 } from './helpers/user-management';
 
-test.beforeEach(({}, testInfo) => {
+test.beforeEach(async ({}, testInfo) => {
 	const myEmail = `test-${getRandomChars()}@test.com`;
 
-	testInfo.attach('email', { body: myEmail });
+	await testInfo.attach('email', { body: myEmail });
 });
 
 test.afterEach(async ({ page }, testInfo) => {
-	page.close();
+	await page.close();
 	const myEmail = testInfo.attachments
 		.find(({ name }) => name === 'email')
 		.body.toString();
@@ -33,7 +33,9 @@ test('new users can sign up / sign in', async ({ page }, testInfo) => {
 
 	// go to landing page
 	await page.goto('/');
-	await expect(page.getByRole('heading', { name: 'ZenFocus' })).toBeVisible();
+	await expect(
+		page.getByRole('heading', { name: 'Landing page' }),
+	).toBeVisible();
 
 	// try login with not existing credentials
 	await page.getByRole('link', { name: 'I already have an account' }).click();
@@ -76,6 +78,8 @@ test('new users can sign up / sign in', async ({ page }, testInfo) => {
 
 	// user can sign out
 	await page.getByRole('link', { name: 'Sign out' }).click();
-	await expect(page.getByRole('heading', { name: 'ZenFocus' })).toBeVisible();
+	await expect(
+		page.getByRole('heading', { name: 'Landing page' }),
+	).toBeVisible();
 	await expect(page.getByText(myEmail)).not.toBeVisible();
 });

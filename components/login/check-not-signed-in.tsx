@@ -10,8 +10,8 @@ export default function CheckNotSignedIn({ children }) {
 	if (status === 'loading') return <Loading />;
 
 	const { user } = data;
-	if (user && user.emailVerified) {
-		return <RedirectTo to="/app/daily/today" />;
+	if (user?.emailVerified) {
+		return <RedirectTo to="/chat" />;
 	}
 
 	if (user && !user.emailVerified && router.pathname !== '/validate-email') {

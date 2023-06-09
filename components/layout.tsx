@@ -13,17 +13,7 @@ export default function Layout({ children }) {
 						<>
 							<li className="mb-2">Hello {user?.email}</li>
 							<li className="mb-2">
-								<Link href="/notes">Notes</Link>
-							</li>
-							<li className="mb-2">
-								<Link href="/app/daily/today">Today</Link>
-							</li>
-							<li className="mb-2">
-								<Link href="/app/weekly/thisWeek">This week</Link>
-							</li>
-							{/* {isFeatureSet('another-page') && ( */}
-							<li className="mb-2">
-								<Link href="/app/another-page">Another page</Link>
+								<Link href="/chat">Chat</Link>
 							</li>
 							{/* )} */}
 							<li className="mb-2">
@@ -36,7 +26,7 @@ export default function Layout({ children }) {
 								<Link href="/sign-in">Sign in</Link>
 							</li>
 							<li className="mb-2">
-								<Link href="/sign-up">Sign uppppp</Link>
+								<Link href="/sign-up">Sign up</Link>
 							</li>
 						</>
 					)}

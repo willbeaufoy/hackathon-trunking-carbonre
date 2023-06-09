@@ -27,7 +27,7 @@ export function Signin() {
 			.then(async ({ user }) => {
 				if (!user.emailVerified) {
 					await auth.signOut();
-					router.push('/validate-email');
+					router.push('/validate-email').catch(console.error);
 				}
 			})
 			.catch(err => {

@@ -53,7 +53,9 @@ export async function signupAndLogin(page, myEmail: string) {
 	const myPassword = 'password';
 
 	await page.goto('/');
-	await expect(page.getByRole('heading', { name: 'ZenFocus' })).toBeVisible();
+	await expect(
+		page.getByRole('heading', { name: 'Landing page' }),
+	).toBeVisible();
 
 	//// sign up
 	// now sign up
