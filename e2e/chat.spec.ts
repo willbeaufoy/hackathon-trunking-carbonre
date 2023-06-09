@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { getRandomChars } from './helpers/tools';
-import { validateEmail } from './helpers/user-management';
+import { deleteUser, validateEmail } from './helpers/user-management';
 
 const clean = (title: string) => title.replace(/[^a-zA-Z0-9]/g, '_');
 const toEmail = testInfo =>
@@ -45,4 +45,7 @@ test('chat', async ({ page }, testInfo) => {
 	await page.getByPlaceholder('Message').fill('My second message');
 	await page.getByRole('button', { name: 'Send' }).click();
 	await expect(page.getByText('My second message')).toBeVisible();
+
+	// delete the user
+	await deleteUser(myEmail);
 });
