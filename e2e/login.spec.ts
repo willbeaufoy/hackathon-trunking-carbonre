@@ -72,8 +72,8 @@ test('new users can sign up / sign in', async ({ page }, testInfo) => {
 	await page.getByRole('button', { name: 'Login' }).click();
 
 	// once login, user details are visible
-	await page.getByRole('link', { name: 'Notes' }).click();
-	await expect(page.getByRole('heading', { name: 'Notes' })).toBeVisible();
+	await page.getByRole('link', { name: 'Chat' }).click();
+	await expect(page.getByRole('heading', { name: 'Chat' })).toBeVisible();
 	await expect(page.getByText(myEmail)).toBeVisible();
 
 	// user can sign out
