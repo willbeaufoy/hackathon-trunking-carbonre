@@ -8,6 +8,12 @@ service cloud.firestore {
       }
     }
     
+    match /chat {
+      match /{document=**} {
+        allow read, write: if request.auth.uid != null;
+      }
+    }
+
     // Deny all other read and write operations
     match /{document=**} {
       allow read, write: if false;

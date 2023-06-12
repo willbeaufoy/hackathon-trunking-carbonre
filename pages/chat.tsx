@@ -1,10 +1,21 @@
 import Layout from '@/components/layout';
 import BumpUnauthorised from '@/components/login/bump-unauthorised';
-
-import { useState } from 'react';
+import { addDoc, collection, orderBy, query } from 'firebase/firestore';
+import { useAuth, useFirestore, useFirestoreCollectionData } from 'reactfire';
 
 function Chat() {
-	const [messages, setMessages] = useState<string[]>([]);
+	const firestore = useFirestore();
+	const auth = useAuth();
+	const { email } = auth.currentUser;
+	const chatCollection = collection(firestore, `chat`);
+	const chatQuery = query(chatCollection, orderBy('createdAt'));
+	const { status, data: messages } = useFirestoreCollectionData(chatQuery, {
+		idField: 'id',
+	});
+
+	if (status === 'loading') {
+		return <>Loading</>;
+	}
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -13,8 +24,11 @@ function Chat() {
 		) as HTMLInputElement;
 		const message = messageInput.value.trim();
 		if (message) {
-			setMessages(prevMessages => [...prevMessages, message]);
-			messageInput.value = '';
+			addDoc(chatCollection, {
+				message,
+				createdAt: new Date(),
+				email,
+			}).catch(console.error);
 		}
 	};
 
@@ -28,8 +42,10 @@ function Chat() {
 			</form>
 
 			<ul>
-				{messages.map((message, index) => (
-					<li key={index}>{message}</li>
+				{messages.map(({ id, createdAt, message, email }: any) => (
+					<li key={id}>
+						({createdAt.toDate().toISOString()}): {email} -&gt; {message}
+					</li>
 				))}
 			</ul>
 		</>
