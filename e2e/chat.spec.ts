@@ -1,13 +1,9 @@
 import { expect, test } from '@playwright/test';
-import { getRandomChars } from './helpers/tools';
 import { deleteUser, signupAndLogin } from './helpers/user-management';
-
-const clean = (title: string) => title.replace(/[^a-zA-Z0-9]/g, '_');
-const toEmail = testInfo =>
-	`${clean(testInfo.title)}-${getRandomChars()}@test.com`;
+import { testInfoToEmail } from './helpers/tools';
 
 test.beforeEach(async ({ page }, testInfo) => {
-	const myEmail = toEmail(testInfo);
+	const myEmail = testInfoToEmail(testInfo);
 	await testInfo.attach('email', { body: myEmail });
 
 	await signupAndLogin(page, myEmail);
