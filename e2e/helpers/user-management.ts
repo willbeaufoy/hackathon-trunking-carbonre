@@ -30,9 +30,12 @@ export async function validateEmail(myEmail: string) {
 
 export async function deleteUser(myEmail: string) {
 	const user = await retry(() => auth.getUserByEmail(myEmail));
+	const { docs } = await firestore
+		.collection(`chat`)
+		.where('email', '==', user.email)
+		.get();
+	await Promise.all(docs.map(doc => doc.ref.delete()));
 	await auth.deleteUser(user.uid);
-	const doc = firestore.doc(`users/${user.uid}/`);
-	await firestore.recursiveDelete(doc);
 }
 
 export async function signup(page, myEmail: string, myPassword: string) {
