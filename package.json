@@ -11,11 +11,13 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
+		"firebase:login": "firebase login",
 		"firebase:start": "firebase emulators:start",
 		"firebase:dev": "firebase emulators:exec 'npm run dev'",
 		"firebase:firestore:deploy": "firebase deploy --only firestore",
 		"test:playwright": "playwright test",
 		"test:playwright:smoke-test": "SMOKE_TEST=true playwright test",
+		"test:playwright:ui": "playwright test --ui",
 		"prepare": "husky install"
 	},
 	"dependencies": {
