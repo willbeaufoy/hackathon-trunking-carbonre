@@ -12,7 +12,7 @@ export default function Home() {
 					Landing page
 				</h1>
 				<p className="text-lg font-normal text-gray-500 dark:text-gray-400 lg:text-xl">
-					It is all good my friend.
+					It is all really good my friend.
 				</p>
 			</section>
 			<Link
