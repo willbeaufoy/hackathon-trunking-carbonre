@@ -2,6 +2,10 @@
 
 ## Getting started
 
+### Java
+You'll need Java to run the Firebase emulator.
+Follow your system instructions to make `java` available in `PATH`.
+
 ### Node
 
 - Install [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)
