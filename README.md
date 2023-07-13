@@ -1,6 +1,6 @@
 # Hack-a-trunk project
 
-## Getting started
+## Contributing
 
 ### Java
 
@@ -45,7 +45,7 @@ error - FirebaseError: Firebase: Error (auth/invalid-api-key).
 
 ### Configure Firebase
 
-The project is already set up.
+The project is already set up with Firebase, but needs your private and public keys.
 
 - Add the Firebase key  
   Ask for the API key, and create an `.env.local` file with it:
