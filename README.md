@@ -15,12 +15,12 @@ Follow your system instructions to make `java` available in `PATH`.
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 ```
 
-- Install Node 18
+- Install Node 16
 
 ```bash
-nvm install 18
-nvm use 18
-nvm alias default 18  ## optional: make 18 the default node version
+nvm install 16
+nvm use 16
+nvm alias default 16  ## optional: make 16 the default node version
 ```
 
 - Install the dependencies
