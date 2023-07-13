@@ -4,7 +4,7 @@
 
 ### Java
 
-You'll need Java to run the Firebase emulator.
+You'll need Java to run the Firebase emulator.  
 Follow your system instructions to make `java` available in `PATH`.
 
 ### Node
